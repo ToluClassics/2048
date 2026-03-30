@@ -24,7 +24,7 @@ UP/DOWN moves reuse the LEFT/RIGHT logic via board transposition. RIGHT reuses L
 
 ## Game Engine
 
-The core interface is the `Game2048` class in [2048.py](2048.py):
+The core interface is the `Game2048` class in [engine.py](engine.py):
 
 ```python
 game = Game2048(random_seed=42)
@@ -42,18 +42,31 @@ game.score
 game.board
 ```
 
-To watch a random-move game play out in the terminal:
+## Agents
+
+- `RandomAgent` picks one of the four moves uniformly at random. It is a lightweight baseline for checking that the game loop and scoring work as expected.
+- `ExpectimaxAgent` looks ahead several turns with expectimax search and scores future boards with heuristics such as open space, smoothness, monotonicity, corner control, and large-tile growth.
+
+## Running Agents
+
+From the repo root, you can run either agent with `play_game.py`:
 
 ```bash
-python 2048.py
+python3 2048/play_game.py --agent random --max-turns 1000 --seed 42
+python3 2048/play_game.py --agent expectimax --max-turns 1000 --seed 42
 ```
 
-## Project Structure
+To benchmark both agents across multiple seeds:
 
+```bash
+python3 2048/benchmark_agents.py --agents random expectimax --num-games 2 --start-seed 42 --max-turns 1000
 ```
-2048/
-├── 2048.py        # Game engine and board logic
-├── main.py        # Entry point
-├── utils.py       # Utility functions
-└── pyproject.toml
-```
+
+## Benchmark Snapshot
+
+Using seeds `42..43` and `1000` max turns per game:
+
+| Agent | Games | Avg Score | Median Score | Min Score | Max Score | Avg Max Tile | Best Tile |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| random | 2 | 884 | 884 | 600 | 1168 | 96 | 128 |
+| expectimax | 2 | 16064 | 16064 | 15980 | 16148 | 1024 | 1024 |

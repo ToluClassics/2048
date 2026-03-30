@@ -1,3 +1,7 @@
+"""
+This is a Python implementation of the 2048 game engine
+"""
+
 import copy
 import random
 from typing import List, Tuple
@@ -13,6 +17,10 @@ def place_tile(board: Board, value: int, row: int, col: int) -> Board:
     new_board = clone_board(board)
     new_board[row][col] = value
     return new_board
+
+def board_to_key(board: Board) -> Tuple[Tuple[int, ...], ...]:
+    """Convert board to a hashable form for caching."""
+    return tuple(tuple(row) for row in board)
 
 def print_board(board: Board) -> None:
     """Pretty-print the board in a boxed grid."""
