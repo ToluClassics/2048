@@ -2,11 +2,22 @@
 
 ![2048 demo](assets/demo_video.gif)
 
-A 2048 game engine and testbed for evaluating agent strategies — from rule-based to LLM-powered.
+A 2048 game engine and testbed for evaluating agent strategies, from rule-based search to LLMs that are given just enough information to understand the game and must discover strong play for themselves.
 
 ## Overview
 
-This project builds a 2048 environment and uses it to benchmark different agents on multi-turn gameplay. The end goal is a demo comparing how well different LLMs play 2048, with a rule-based Expectimax agent as a baseline.
+This project builds a 2048 environment and uses it to benchmark different agents on multi-turn gameplay. For the LLM agents, we provide the board state and the rules of the game, but not a handcrafted strategy. The point is to see whether the model can infer good long-horizon play on its own and drive the board toward very high scores, with a rule-based Expectimax agent as a baseline.
+
+## Leaderboard
+
+Best scores achieved by each agent. Rule-based agents use seeds `42..43` with `1000` max turns per game. LLM agents are evaluated with the same turn limit across multiple games.
+
+| Agent | Games | Avg Score | Median Score | Min Score | Max Score | Avg Max Tile | Best Tile |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| random | 2 | 884 | 884 | 600 | 1168 | 96 | 128 |
+| expectimax | 2 | 16064 | 16064 | 15980 | 16148 | 1024 | 1024 |
+| GPT-5.4 Mini | 4 | 3879 | 3398 | 2800 | 5920 | 320 | 512 |
+| GPT-5.4 | 4 | 8315 | 7944 | 5584 | 11788 | 640 | 1024 |
 
 
 ## How It Works
@@ -61,12 +72,3 @@ To benchmark both agents across multiple seeds:
 ```bash
 python3 2048/benchmark_agents.py --agents random expectimax --num-games 2 --start-seed 42 --max-turns 1000
 ```
-
-## Benchmark Snapshot
-
-Using seeds `42..43` and `1000` max turns per game:
-
-| Agent | Games | Avg Score | Median Score | Min Score | Max Score | Avg Max Tile | Best Tile |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| random | 2 | 884 | 884 | 600 | 1168 | 96 | 128 |
-| expectimax | 2 | 16064 | 16064 | 15980 | 16148 | 1024 | 1024 |

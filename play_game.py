@@ -7,13 +7,15 @@ from typing import Callable
 from base_agent import BaseAgent
 from engine import Game2048, POSSIBLE_MOVES, print_board
 from expectimax_agent import ExpectimaxAgent
-from llm_agent import LLMAgent
+from openai_agent import OpenAIAgent
 from random_agent import RandomAgent
+from vllm_agent import VLLMAgent
 
 AGENT_FACTORIES: dict[str, Callable[[int | None], BaseAgent]] = {
     "random": lambda seed: RandomAgent(random_seed=seed),
     "expectimax": lambda seed: ExpectimaxAgent(),
-    "llm": lambda seed: LLMAgent(),
+    "openai": lambda seed: OpenAIAgent(),
+    "vllm": lambda seed: VLLMAgent(),
 }
 
 
@@ -41,7 +43,7 @@ def play_game(
         move, _ = agent.get_move(copy.deepcopy(game.board))
         if move == "NONE":
             if verbose:
-                if isinstance(agent, LLMAgent) and agent.last_response.strip():
+                if hasattr(agent, "last_response") and agent.last_response.strip():
                     print("LLM response:")
                     print(agent.last_response.strip())
                     
@@ -61,7 +63,7 @@ def play_game(
 
         moved = game.step(move)
         if verbose:
-            if isinstance(agent, LLMAgent) and agent.last_response.strip():
+            if hasattr(agent, "last_response") and agent.last_response.strip():
                 print("LLM response:")
                 print(agent.last_response.strip())
             print(f"Move: {move}")
@@ -131,8 +133,13 @@ def main() -> int:
     if args.seed is None:
         args.seed = random.randint(0, 2**32 - 1)
 
-    if args.agent == "llm":
-        agent = LLMAgent(
+    if args.agent == "openai":
+        agent = OpenAIAgent(
+            model=args.model,
+            api_base_url=args.api_base_url,
+        )
+    elif args.agent == "vllm":
+        agent = VLLMAgent(
             model=args.model,
             api_base_url=args.api_base_url,
         )
