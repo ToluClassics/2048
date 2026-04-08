@@ -1,0 +1,2462 @@
+Agent: VLLMAgent
++-------+-------+-------+-------+
+|       |       |       |     2 |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+
+Score: 0
+============================================= Turn 1 =============================================
+LLM response:
+<response>
+  <reasoning>Move the single 2 tile to a corner (top‑left) to keep the board organized.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     2 |     2 |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+
+Score: 0
+============================================= Turn 2 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges the two 2s into a 4, gaining reward and keeping the board in a favorable state.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|     2 |       |       |       |
++-------+-------+-------+-------+
+
+Score: 4
+============================================= Turn 3 =============================================
+LLM response:
+<response>
+  <reasoning>Move UP keeps the 4 at the top-left stable while moving the 2 up, creating a potential for a future merge and preserving empty space.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+|     2 |       |     2 |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+
+Score: 4
+============================================= Turn 4 =============================================
+LLM response:
+<response>
+  <reasoning>Move UP brings the two 2‑tiles together on the top row, setting up an immediate merge into a 4 and preserving the existing 4 in the corner.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     4 |       |     2 |       |
++-------+-------+-------+-------+
+|     2 |       |     2 |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+
+Score: 4
+============================================= Turn 5 =============================================
+LLM response:
+<response>
+  <reasoning>Moving LEFT merges the bottom row’s 2s into a 4, creating two 4s stacked vertically in the leftmost column. This sets up a potential 8 merge on the next UP/DOWN move while preserving ample empty space.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     4 |     2 |       |       |
++-------+-------+-------+-------+
+|     4 |       |     2 |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+
+Score: 8
+============================================= Turn 6 =============================================
+LLM response:
+<response>
+  <reasoning>UP merges the two 4s into an 8 and keeps the board moving toward the top, preserving space for future merges.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     8 |     2 |     2 |       |
++-------+-------+-------+-------+
+|       |     2 |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+
+Score: 16
+============================================= Turn 7 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges the two 2s in the top row to a 4 while keeping the 8 in the top-left corner and preserving the remaining 2 for future merges.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     8 |     4 |       |       |
++-------+-------+-------+-------+
+|     2 |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|       |       |     2 |       |
++-------+-------+-------+-------+
+
+Score: 20
+============================================= Turn 8 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT keeps the 8 and 4 together in the top row and only shifts the lone 2 in the bottom row leftwards, creating an extra empty cell and setting up a potential merge in the same column later.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     8 |     4 |       |     2 |
++-------+-------+-------+-------+
+|     2 |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|     2 |       |       |       |
++-------+-------+-------+-------+
+
+Score: 20
+============================================= Turn 9 =============================================
+LLM response:
+<response>
+  <reasoning>UP merges the two 2s in column 1 into a 4, giving a reward of 4 and keeping the 8 in the top‑left corner for a strong structure.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     8 |     4 |       |     2 |
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|       |       |     2 |       |
++-------+-------+-------+-------+
+
+Score: 24
+============================================= Turn 10 =============================================
+LLM response:
+<response>
+  <reasoning>Moving UP keeps the 8 and 4 together, brings the two 2s close for a future merge, and preserves the structure without locking the board.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     8 |     4 |     2 |     2 |
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|       |     2 |       |       |
++-------+-------+-------+-------+
+
+Score: 24
+============================================= Turn 11 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT creates a merge of the two 2s in the top row, giving a reward of 4 and preserving empty space.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     8 |     4 |     4 |       |
++-------+-------+-------+-------+
+|     4 |     2 |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|     2 |       |       |       |
++-------+-------+-------+-------+
+
+Score: 28
+============================================= Turn 12 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges the two 4s into an 8, giving immediate reward and keeping high tiles clustered.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     8 |     8 |       |       |
++-------+-------+-------+-------+
+|     4 |     2 |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|     2 |       |     2 |       |
++-------+-------+-------+-------+
+
+Score: 36
+============================================= Turn 13 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT creates two merges (8+8=16 and 2+2=4), keeping the largest tile in the top-left corner and preserving many empty cells for future moves.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|    16 |       |       |       |
++-------+-------+-------+-------+
+|     4 |     2 |       |       |
++-------+-------+-------+-------+
+|       |     2 |       |       |
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+
+Score: 56
+============================================= Turn 14 =============================================
+LLM response:
+<response>
+  <reasoning>UP merges two pairs (4+4→8 and 2+2→4), maximizing reward and keeping the 16 in the top-left corner for a strong corner layout.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|    16 |     4 |     2 |       |
++-------+-------+-------+-------+
+|     8 |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+
+Score: 68
+============================================= Turn 15 =============================================
+LLM response:
+<response>
+  <reasoning>DOWN keeps the 16 and 8 tiles adjacent, preserving a potential merge and leaving more space for future moves.</reasoning>
+  <action>DOWN</action>
+</response>
+Move: DOWN
++-------+-------+-------+-------+
+|     2 |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|    16 |       |       |       |
++-------+-------+-------+-------+
+|     8 |     4 |     2 |       |
++-------+-------+-------+-------+
+
+Score: 68
+============================================= Turn 16 =============================================
+LLM response:
+<response>
+  <reasoning>RIGHT moves the 2 on top to the rightmost column and aligns the 2, 16, 4, 8 vertically, setting up future merges.</reasoning>
+  <action>RIGHT</action>
+</response>
+Move: RIGHT
++-------+-------+-------+-------+
+|       |     2 |       |     2 |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |    16 |
++-------+-------+-------+-------+
+|       |     8 |     4 |     2 |
++-------+-------+-------+-------+
+
+Score: 68
+============================================= Turn 17 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges the two 2's into a 4, creating reward and moving the 16 toward the left side, keeping the board compact.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+|     2 |       |       |       |
++-------+-------+-------+-------+
+|    16 |       |       |       |
++-------+-------+-------+-------+
+|     8 |     4 |     2 |       |
++-------+-------+-------+-------+
+
+Score: 72
+============================================= Turn 18 =============================================
+LLM response:
+<response>
+  <reasoning>Only the RIGHT move changes the board; all other moves leave it unchanged.</reasoning>
+  <action>RIGHT</action>
+</response>
+Move: RIGHT
++-------+-------+-------+-------+
+|       |       |       |     4 |
++-------+-------+-------+-------+
+|     2 |       |       |     2 |
++-------+-------+-------+-------+
+|       |       |       |    16 |
++-------+-------+-------+-------+
+|       |     8 |     4 |     2 |
++-------+-------+-------+-------+
+
+Score: 72
+============================================= Turn 19 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT creates one merge (2+2→4) and aligns the resulting 4 with the 4 below it, preserving many empty cells and keeping the large tiles near the left side for future merges.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+|    16 |       |       |     2 |
++-------+-------+-------+-------+
+|     8 |     4 |     2 |       |
++-------+-------+-------+-------+
+
+Score: 76
+============================================= Turn 20 =============================================
+LLM response:
+<response>
+  <reasoning>UP merges the two 4's into an 8, creating a reward and leaving many empty cells for future growth.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     8 |     4 |     2 |     2 |
++-------+-------+-------+-------+
+|    16 |       |       |       |
++-------+-------+-------+-------+
+|     8 |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |     2 |
++-------+-------+-------+-------+
+
+Score: 84
+============================================= Turn 21 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges the two 2s into a 4, keeps the large tiles in the left column, and preserves a good monotonic structure.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     8 |     4 |     4 |     2 |
++-------+-------+-------+-------+
+|    16 |       |       |       |
++-------+-------+-------+-------+
+|     8 |       |       |       |
++-------+-------+-------+-------+
+|     2 |       |       |       |
++-------+-------+-------+-------+
+
+Score: 88
+============================================= Turn 22 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges the two 4's into an 8, creates an empty cell, and keeps the high tiles (16, 8, 2) in a compact, merge‑friendly configuration.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     8 |     8 |     2 |       |
++-------+-------+-------+-------+
+|    16 |       |       |       |
++-------+-------+-------+-------+
+|     8 |       |       |       |
++-------+-------+-------+-------+
+|     2 |       |     2 |       |
++-------+-------+-------+-------+
+
+Score: 96
+============================================= Turn 23 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges two 8s into 16 and two 2s into 4, giving a reward of 20, and places all high tiles in the left column, setting up a future 16+16 merge.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|    16 |     2 |       |       |
++-------+-------+-------+-------+
+|    16 |       |     2 |       |
++-------+-------+-------+-------+
+|     8 |       |       |       |
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+
+Score: 116
+============================================= Turn 24 =============================================
+LLM response:
+<response>
+  <reasoning>Moving UP merges the two 16 tiles into a 32, creating a large tile at the corner and leaving the two 2's adjacent for a future merge.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|    32 |     2 |     2 |       |
++-------+-------+-------+-------+
+|     8 |       |       |       |
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |     2 |
++-------+-------+-------+-------+
+
+Score: 148
+============================================= Turn 25 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges the two 2's into a 4, keeps the 32 in the top-left corner, and increases empty cells, providing better future merge opportunities.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|    32 |     4 |       |       |
++-------+-------+-------+-------+
+|     8 |       |       |       |
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+|     2 |     2 |       |       |
++-------+-------+-------+-------+
+
+Score: 152
+============================================= Turn 26 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges the two 2s into a 4, giving an immediate reward and keeping the board compact with many empty cells for future moves.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|    32 |     4 |       |       |
++-------+-------+-------+-------+
+|     8 |       |       |       |
++-------+-------+-------+-------+
+|     4 |       |     2 |       |
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+
+Score: 156
+============================================= Turn 27 =============================================
+LLM response:
+<response>
+  <reasoning>UP creates a merge of the two 4‑tiles into an 8, giving a reward of 8 and leaving the 8‑tiles adjacent for a future merge. It also keeps the large 32 tile in the top‑left corner, maintaining a strong structure.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|    32 |     4 |     2 |       |
++-------+-------+-------+-------+
+|     8 |       |       |     2 |
++-------+-------+-------+-------+
+|     8 |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+
+Score: 164
+============================================= Turn 28 =============================================
+LLM response:
+<response>
+  <reasoning>UP merges the two 8s into a 16 (reward 16) and creates a pair of 2s that can merge next turn.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|    32 |     4 |     2 |     2 |
++-------+-------+-------+-------+
+|    16 |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|     2 |       |       |       |
++-------+-------+-------+-------+
+
+Score: 180
+============================================= Turn 29 =============================================
+LLM response:
+<response>
+  <reasoning>Move LEFT merges the two 2s into a 4, creates a new 4 next to the existing 4, keeps the 32 and 16 in the left column, and preserves many empty cells for future growth.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|    32 |     4 |     4 |       |
++-------+-------+-------+-------+
+|    16 |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|     2 |       |     2 |       |
++-------+-------+-------+-------+
+
+Score: 184
+============================================= Turn 30 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT creates two merges (4+4→8 and 2+2→4), keeps the 32 in the top-left corner, and preserves a compact structure for future moves.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|    32 |     8 |       |       |
++-------+-------+-------+-------+
+|    16 |       |       |     2 |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+
+Score: 196
+============================================= Turn 31 =============================================
+LLM response:
+<response>
+  <reasoning>Move LEFT keeps the highest tile (32) in the top-left corner, preserves the monotonic layout, and shifts the 2 next to the 16 for future merging opportunities.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|    32 |     8 |     2 |       |
++-------+-------+-------+-------+
+|    16 |     2 |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+
+Score: 196
+============================================= Turn 32 =============================================
+LLM response:
+<response>
+  <reasoning>UP keeps the largest tile (32) and the 16 in the top-left corner, preserving adjacency and a compact shape for future merges.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|    32 |     8 |     2 |       |
++-------+-------+-------+-------+
+|    16 |     2 |       |     2 |
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+
+Score: 196
+============================================= Turn 33 =============================================
+LLM response:
+<response>
+  <reasoning>RIGHT creates two 4‑tiles adjacent vertically, enabling a merge of 4 for higher reward on the next turn.</reasoning>
+  <action>RIGHT</action>
+</response>
+Move: RIGHT
++-------+-------+-------+-------+
+|       |    32 |     8 |     2 |
++-------+-------+-------+-------+
+|       |       |    16 |     4 |
++-------+-------+-------+-------+
+|       |       |       |     4 |
++-------+-------+-------+-------+
+|     2 |       |       |       |
++-------+-------+-------+-------+
+
+Score: 200
+============================================= Turn 34 =============================================
+LLM response:
+<response>
+  <reasoning>UP creates a merge of 4+4=8 and leaves many empty cells at the bottom, giving room to build upwards while keeping the 32 near the top.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     2 |    32 |     8 |     2 |
++-------+-------+-------+-------+
+|       |       |    16 |     8 |
++-------+-------+-------+-------+
+|       |       |       |     2 |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+
+Score: 208
+============================================= Turn 35 =============================================
+LLM response:
+<response>
+  <reasoning>DOWN moves tiles to create a pair of adjacent 8s in row 3, setting up a merge for the next turn while keeping empty spaces and the 32 tile available.</reasoning>
+  <action>DOWN</action>
+</response>
+Move: DOWN
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|     2 |       |       |     2 |
++-------+-------+-------+-------+
+|       |       |     8 |     8 |
++-------+-------+-------+-------+
+|     2 |    32 |    16 |     2 |
++-------+-------+-------+-------+
+
+Score: 208
+============================================= Turn 36 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT creates two merges (4 and 16) for a reward of 20 and leaves many empty cells while keeping the 4 close to the top-left corner, which is a favorable position for future merges.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|       |       |     2 |       |
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+|    16 |       |       |       |
++-------+-------+-------+-------+
+|     2 |    32 |    16 |     2 |
++-------+-------+-------+-------+
+
+Score: 228
+============================================= Turn 37 =============================================
+LLM response:
+<response>
+  <reasoning>UP merges the two 2 tiles into a 4, creates many empty cells, and moves the larger tiles toward the top, improving the board structure.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     4 |    32 |     2 |     2 |
++-------+-------+-------+-------+
+|    16 |       |    16 |       |
++-------+-------+-------+-------+
+|     2 |       |     2 |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+
+Score: 228
+============================================= Turn 38 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges two pairs (2+2, 16+16, 2+2) for a reward of 40 and keeps the 32 tile closer to the left side, which is a more stable corner strategy.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     4 |    32 |     4 |       |
++-------+-------+-------+-------+
+|    32 |       |       |       |
++-------+-------+-------+-------+
+|     4 |       |     2 |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+
+Score: 268
+============================================= Turn 39 =============================================
+LLM response:
+<response>
+  <reasoning>Moving UP brings the two 32 tiles into the same row, setting up a 64 merge on the next LEFT move while keeping empty spaces for future growth.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     4 |    32 |     4 |       |
++-------+-------+-------+-------+
+|    32 |     2 |     2 |       |
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+
+Score: 268
+============================================= Turn 40 =============================================
+LLM response:
+<response>
+  <reasoning>RIGHT merges the two 2's into a 4 and sets up adjacent 32's and 4's for future merges, while LEFT leaves only one 4. RIGHT is the better move.</reasoning>
+  <action>RIGHT</action>
+</response>
+Move: RIGHT
++-------+-------+-------+-------+
+|       |     4 |    32 |     4 |
++-------+-------+-------+-------+
+|     2 |       |    32 |     4 |
++-------+-------+-------+-------+
+|       |       |       |     4 |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+
+Score: 272
+============================================= Turn 41 =============================================
+LLM response:
+<response>
+  <reasoning>UP merges two 32s into 64 and two 4s into 8, creating the highest possible reward this turn while keeping the board in a compact configuration.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     2 |     4 |    64 |     8 |
++-------+-------+-------+-------+
+|       |       |       |     4 |
++-------+-------+-------+-------+
+|       |       |       |     2 |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+
+Score: 344
+============================================= Turn 42 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT keeps the top row intact, preserving the high tiles (64, 8) together and creates empty spaces on the right side for future merges.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     2 |     4 |    64 |     8 |
++-------+-------+-------+-------+
+|     4 |       |     2 |       |
++-------+-------+-------+-------+
+|     2 |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+
+Score: 344
+============================================= Turn 43 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT is a legal move that keeps the high tile 64 in place and brings a 2 next to a 4 in the same column, setting up a potential merge in a future move while preserving many empty cells.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     2 |     4 |    64 |     8 |
++-------+-------+-------+-------+
+|     4 |     2 |       |       |
++-------+-------+-------+-------+
+|     2 |       |       |       |
++-------+-------+-------+-------+
+|     2 |       |       |       |
++-------+-------+-------+-------+
+
+Score: 344
+============================================= Turn 44 =============================================
+LLM response:
+<response>
+  <reasoning>DOWN creates a pair of 2’s in the same row (row 2 col 1 and col 2), enabling a future merge while preserving the 64 and 8 in the top row. It also frees an empty cell at the top left.</reasoning>
+  <action>DOWN</action>
+</response>
+Move: DOWN
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|     2 |       |     2 |       |
++-------+-------+-------+-------+
+|     4 |     4 |       |       |
++-------+-------+-------+-------+
+|     4 |     2 |    64 |     8 |
++-------+-------+-------+-------+
+
+Score: 348
+============================================= Turn 45 =============================================
+LLM response:
+<response>
+  <reasoning>RIGHT creates two 8s stacked vertically (at (2,3) and (3,3)), enabling a 16 merge on the next DOWN move, while preserving the 64 in place. It also leaves many empty cells on the left for future tiles.</reasoning>
+  <action>RIGHT</action>
+</response>
+Move: RIGHT
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |     4 |
++-------+-------+-------+-------+
+|       |       |     2 |     8 |
++-------+-------+-------+-------+
+|     4 |     2 |    64 |     8 |
++-------+-------+-------+-------+
+
+Score: 360
+============================================= Turn 46 =============================================
+LLM response:
+<response>
+  <reasoning>UP creates a merge (2+2=4), increases empty cells, and keeps the high 64 tile in a more central position for future merges.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     4 |     2 |     2 |     4 |
++-------+-------+-------+-------+
+|       |       |    64 |    16 |
++-------+-------+-------+-------+
+|       |       |     2 |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+
+Score: 376
+============================================= Turn 47 =============================================
+LLM response:
+<response>
+  <reasoning>Both LEFT and RIGHT change the board by merging the two middle 2's into a 4, leaving the rest unchanged. Either move is valid; choose LEFT.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     4 |     4 |     4 |     2 |
++-------+-------+-------+-------+
+|    64 |    16 |       |       |
++-------+-------+-------+-------+
+|     2 |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+
+Score: 380
+============================================= Turn 48 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges two 4's into an 8, creating a reward and preserving the high tiles (64, 16) in place while keeping many empty cells for future moves.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     8 |     4 |     2 |       |
++-------+-------+-------+-------+
+|    64 |    16 |       |       |
++-------+-------+-------+-------+
+|     2 |       |       |       |
++-------+-------+-------+-------+
+|       |     2 |       |       |
++-------+-------+-------+-------+
+
+Score: 388
+============================================= Turn 49 =============================================
+LLM response:
+<response>
+  <reasoning>Moving DOWN clusters the three 2‑tiles into one row, setting up a future merge while keeping the high tiles near the left side.</reasoning>
+  <action>DOWN</action>
+</response>
+Move: DOWN
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+|     8 |     4 |       |       |
++-------+-------+-------+-------+
+|    64 |    16 |       |       |
++-------+-------+-------+-------+
+|     2 |     2 |     2 |     2 |
++-------+-------+-------+-------+
+
+Score: 388
+============================================= Turn 50 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges two 2‑tiles into two 4‑tiles, giving a higher immediate reward and keeping the board compact.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|       |     2 |       |       |
++-------+-------+-------+-------+
+|     8 |     4 |       |       |
++-------+-------+-------+-------+
+|    64 |    16 |       |       |
++-------+-------+-------+-------+
+|     4 |     4 |       |       |
++-------+-------+-------+-------+
+
+Score: 396
+============================================= Turn 51 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges the two 4s in the bottom row, giving a reward of 8 and creating an empty cell for future moves.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     2 |       |       |       |
++-------+-------+-------+-------+
+|     8 |     4 |       |       |
++-------+-------+-------+-------+
+|    64 |    16 |       |     2 |
++-------+-------+-------+-------+
+|     8 |       |       |       |
++-------+-------+-------+-------+
+
+Score: 404
+============================================= Turn 52 =============================================
+LLM response:
+<response>
+  <reasoning>Moving RIGHT will shift the two 2‑tiles into the same column, setting up an immediate merge on the next UP or DOWN move. It also keeps the larger tiles (64, 16) in a more compact left‑handed area by moving them rightward, which is acceptable as no merges occur now.</reasoning>
+  <action>RIGHT</action>
+</response>
+Move: RIGHT
++-------+-------+-------+-------+
+|       |     2 |       |     2 |
++-------+-------+-------+-------+
+|       |       |     8 |     4 |
++-------+-------+-------+-------+
+|       |    64 |    16 |     2 |
++-------+-------+-------+-------+
+|       |       |       |     8 |
++-------+-------+-------+-------+
+
+Score: 404
+============================================= Turn 53 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT creates a merge of two 2's into a 4, increasing reward and keeping the large tiles (64, 16, 8) aligned on the left side for future merges.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+|     8 |     4 |       |       |
++-------+-------+-------+-------+
+|    64 |    16 |     2 |       |
++-------+-------+-------+-------+
+|     8 |       |       |     2 |
++-------+-------+-------+-------+
+
+Score: 408
+============================================= Turn 54 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT keeps the high tiles (64, 16, 8) near the bottom-left corner and preserves the current structure, giving the best chance for future merges.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+|     8 |     4 |       |     2 |
++-------+-------+-------+-------+
+|    64 |    16 |     2 |       |
++-------+-------+-------+-------+
+|     8 |     2 |       |       |
++-------+-------+-------+-------+
+
+Score: 408
+============================================= Turn 55 =============================================
+LLM response:
+<response>
+  <reasoning>UP creates two adjacent merge pairs (4+4 and 2+2) on the top row while keeping the large tiles (64, 16, 8) in place, facilitating a strong next move.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     4 |     4 |     2 |     2 |
++-------+-------+-------+-------+
+|     8 |    16 |       |       |
++-------+-------+-------+-------+
+|    64 |     2 |       |       |
++-------+-------+-------+-------+
+|     8 |       |       |     2 |
++-------+-------+-------+-------+
+
+Score: 408
+============================================= Turn 56 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT creates an 8‑tile merge (row 0: 4+4=8) and preserves many empty spaces for future merges.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     8 |     4 |       |       |
++-------+-------+-------+-------+
+|     8 |    16 |       |       |
++-------+-------+-------+-------+
+|    64 |     2 |       |     2 |
++-------+-------+-------+-------+
+|     8 |     2 |       |       |
++-------+-------+-------+-------+
+
+Score: 420
+============================================= Turn 57 =============================================
+LLM response:
+<response>
+  <reasoning>UP creates two merges (16 and 4) for a reward of 20 and keeps the 64 in the left column while moving the 16 to the top-left corner, a good position for future merges.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|    16 |     4 |       |     2 |
++-------+-------+-------+-------+
+|    64 |    16 |       |       |
++-------+-------+-------+-------+
+|     8 |     4 |     2 |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+
+Score: 440
+============================================= Turn 58 =============================================
+LLM response:
+<response>
+  <reasoning>Moving DOWN brings the two 2‑tiles to the bottom row, setting up a merge on the next turn and preserving the high tiles in place.</reasoning>
+  <action>DOWN</action>
+</response>
+Move: DOWN
++-------+-------+-------+-------+
+|       |     2 |       |       |
++-------+-------+-------+-------+
+|    16 |     4 |       |       |
++-------+-------+-------+-------+
+|    64 |    16 |       |       |
++-------+-------+-------+-------+
+|     8 |     4 |     2 |     2 |
++-------+-------+-------+-------+
+
+Score: 440
+============================================= Turn 59 =============================================
+LLM response:
+<response>
+  <reasoning>RIGHT creates a merge of the two 2 tiles into an 8, giving the highest immediate reward and setting up a potential future merge.</reasoning>
+  <action>RIGHT</action>
+</response>
+Move: RIGHT
++-------+-------+-------+-------+
+|     2 |       |       |     2 |
++-------+-------+-------+-------+
+|       |       |    16 |     4 |
++-------+-------+-------+-------+
+|       |       |    64 |    16 |
++-------+-------+-------+-------+
+|       |     8 |     4 |     4 |
++-------+-------+-------+-------+
+
+Score: 444
+============================================= Turn 60 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT creates two merges (2+2→4 and 4+4→8), increasing reward and keeping high tiles aligned on the left for future merges.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+|    16 |     4 |     2 |       |
++-------+-------+-------+-------+
+|    64 |    16 |       |       |
++-------+-------+-------+-------+
+|     8 |     8 |       |       |
++-------+-------+-------+-------+
+
+Score: 456
+============================================= Turn 61 =============================================
+LLM response:
+<response>
+  <reasoning>UP moves the tiles to create two adjacent 16s (row 1) and two adjacent 4s (row 0), setting up a potential 32‑merge and an 8‑merge in the next move while keeping many empty cells.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     4 |     4 |     2 |       |
++-------+-------+-------+-------+
+|    16 |    16 |       |       |
++-------+-------+-------+-------+
+|    64 |     8 |       |     2 |
++-------+-------+-------+-------+
+|     8 |       |       |       |
++-------+-------+-------+-------+
+
+Score: 456
+============================================= Turn 62 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges the two 4s and the two 16s for a reward of 40, keeps the large 64 tile near the left edge, and preserves many empty cells for future growth.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     8 |     2 |       |     2 |
++-------+-------+-------+-------+
+|    32 |       |       |       |
++-------+-------+-------+-------+
+|    64 |     8 |     2 |       |
++-------+-------+-------+-------+
+|     8 |       |       |       |
++-------+-------+-------+-------+
+
+Score: 496
+============================================= Turn 63 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT creates a merge (2+2→4), keeps the two 8s in the same column for future merging, and preserves a good structure for the 32 and 64 tiles.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     8 |     4 |       |       |
++-------+-------+-------+-------+
+|    32 |       |     2 |       |
++-------+-------+-------+-------+
+|    64 |     8 |     2 |       |
++-------+-------+-------+-------+
+|     8 |       |       |       |
++-------+-------+-------+-------+
+
+Score: 500
+============================================= Turn 64 =============================================
+LLM response:
+<response>
+  <reasoning>DOWN creates two adjacent 8s that can merge next move, increasing reward potential.</reasoning>
+  <action>DOWN</action>
+</response>
+Move: DOWN
++-------+-------+-------+-------+
+|     8 |       |     2 |       |
++-------+-------+-------+-------+
+|    32 |       |       |       |
++-------+-------+-------+-------+
+|    64 |     4 |       |       |
++-------+-------+-------+-------+
+|     8 |     8 |     4 |       |
++-------+-------+-------+-------+
+
+Score: 504
+============================================= Turn 65 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT creates a merge (8+8=16) and places the new 16 tile in the bottom‑left corner, preserving many empty spaces and keeping the largest tile in a corner for future merges.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     8 |     2 |       |       |
++-------+-------+-------+-------+
+|    32 |       |       |       |
++-------+-------+-------+-------+
+|    64 |     4 |       |     2 |
++-------+-------+-------+-------+
+|    16 |     4 |       |       |
++-------+-------+-------+-------+
+
+Score: 520
+============================================= Turn 66 =============================================
+LLM response:
+<response>
+  <reasoning>UP merges the two 4s in column 2 into an 8, preserving the high tiles (64, 32) in the upper left region and creating a new 8 near them.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     8 |     2 |       |     2 |
++-------+-------+-------+-------+
+|    32 |     8 |       |       |
++-------+-------+-------+-------+
+|    64 |       |     2 |       |
++-------+-------+-------+-------+
+|    16 |       |       |       |
++-------+-------+-------+-------+
+
+Score: 528
+============================================= Turn 67 =============================================
+LLM response:
+<response>
+  <reasoning>RIGHT creates a merge (4) and leaves more empty cells than LEFT, preserving space for future moves.</reasoning>
+  <action>RIGHT</action>
+</response>
+Move: RIGHT
++-------+-------+-------+-------+
+|       |       |     8 |     4 |
++-------+-------+-------+-------+
+|       |       |    32 |     8 |
++-------+-------+-------+-------+
+|       |       |    64 |     2 |
++-------+-------+-------+-------+
+|       |     2 |       |    16 |
++-------+-------+-------+-------+
+
+Score: 532
+============================================= Turn 68 =============================================
+LLM response:
+<response>
+  <reasoning>DOWN brings two 8s together, setting up a merge on the next move.</reasoning>
+  <action>DOWN</action>
+</response>
+Move: DOWN
++-------+-------+-------+-------+
+|       |       |       |     4 |
++-------+-------+-------+-------+
+|       |       |     8 |     8 |
++-------+-------+-------+-------+
+|     2 |       |    32 |     2 |
++-------+-------+-------+-------+
+|       |     2 |    64 |    16 |
++-------+-------+-------+-------+
+
+Score: 532
+============================================= Turn 69 =============================================
+LLM response:
+<response>
+  <reasoning>RIGHT merges the two 8’s into a 16 for a reward of 16, leaves many empty cells, and positions the two 2’s in column 1 so that an UP move can merge them into a 4 later.</reasoning>
+  <action>RIGHT</action>
+</response>
+Move: RIGHT
++-------+-------+-------+-------+
+|       |       |     2 |     4 |
++-------+-------+-------+-------+
+|       |       |       |    16 |
++-------+-------+-------+-------+
+|       |     2 |    32 |     2 |
++-------+-------+-------+-------+
+|       |     2 |    64 |    16 |
++-------+-------+-------+-------+
+
+Score: 548
+============================================= Turn 70 =============================================
+LLM response:
+<response>
+  <reasoning>UP merges the two 2’s in column 2 into a 4, creating a new merge opportunity while keeping the board compact.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|       |     4 |     2 |     4 |
++-------+-------+-------+-------+
+|       |       |    32 |    16 |
++-------+-------+-------+-------+
+|       |       |    64 |     2 |
++-------+-------+-------+-------+
+|     2 |       |       |    16 |
++-------+-------+-------+-------+
+
+Score: 552
+============================================= Turn 71 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT keeps the largest tiles (64 and 32) in place, moves a 4 into the top‑left corner, and preserves many empty cells for future moves.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     4 |     2 |     4 |       |
++-------+-------+-------+-------+
+|    32 |    16 |       |     2 |
++-------+-------+-------+-------+
+|    64 |     2 |       |       |
++-------+-------+-------+-------+
+|     2 |    16 |       |       |
++-------+-------+-------+-------+
+
+Score: 552
+============================================= Turn 72 =============================================
+LLM response:
+<response>
+  <reasoning>RIGHT is the only legal move that changes the board and sets up a merge of two 2‑tiles (in column 4) when the next move is UP, yielding a 4‑tile and a reward of 4. LEFT, UP, and DOWN would leave the board unchanged.</reasoning>
+  <action>RIGHT</action>
+</response>
+Move: RIGHT
++-------+-------+-------+-------+
+|       |     4 |     2 |     4 |
++-------+-------+-------+-------+
+|     2 |    32 |    16 |     2 |
++-------+-------+-------+-------+
+|       |       |    64 |     2 |
++-------+-------+-------+-------+
+|       |       |     2 |    16 |
++-------+-------+-------+-------+
+
+Score: 552
+============================================= Turn 73 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT creates a merge (4+4=8) and places the 64 tile in the bottom‑left corner, preserving a strong corner structure while keeping many empty cells for future moves.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     4 |     2 |     4 |       |
++-------+-------+-------+-------+
+|     2 |    32 |    16 |     2 |
++-------+-------+-------+-------+
+|    64 |     2 |       |     2 |
++-------+-------+-------+-------+
+|     2 |    16 |       |       |
++-------+-------+-------+-------+
+
+Score: 552
+============================================= Turn 74 =============================================
+LLM response:
+<response>
+  <reasoning>UP merges the two 2's in column 4 into a 4, creating a new 4 adjacent to an existing 4 in the top row, setting up a potential 8 merge on the next move.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     4 |     2 |     4 |     4 |
++-------+-------+-------+-------+
+|     2 |    32 |    16 |     2 |
++-------+-------+-------+-------+
+|    64 |     2 |       |       |
++-------+-------+-------+-------+
+|     2 |    16 |       |       |
++-------+-------+-------+-------+
+
+Score: 556
+============================================= Turn 75 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges the two 4s into an 8 and keeps the 8 adjacent to the 16 and 32, forming a useful cluster near the top-left corner.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     4 |     2 |     8 |       |
++-------+-------+-------+-------+
+|     2 |    32 |    16 |     2 |
++-------+-------+-------+-------+
+|    64 |     2 |       |       |
++-------+-------+-------+-------+
+|     2 |    16 |       |     2 |
++-------+-------+-------+-------+
+
+Score: 564
+============================================= Turn 76 =============================================
+LLM response:
+<response>
+  <reasoning>UP creates a merge of the two 2s in column 4, yielding a 4 and preserving a good board shape.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     4 |     2 |     8 |     4 |
++-------+-------+-------+-------+
+|     2 |    32 |    16 |       |
++-------+-------+-------+-------+
+|    64 |     2 |     2 |       |
++-------+-------+-------+-------+
+|     2 |    16 |       |       |
++-------+-------+-------+-------+
+
+Score: 568
+============================================= Turn 77 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT keeps the large 64 tile in place and creates a new 4 by merging the two 2s in row 3, giving more merging potential without moving the high tile.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     4 |     2 |     8 |     4 |
++-------+-------+-------+-------+
+|     2 |    32 |    16 |       |
++-------+-------+-------+-------+
+|    64 |     4 |       |       |
++-------+-------+-------+-------+
+|     2 |    16 |       |     2 |
++-------+-------+-------+-------+
+
+Score: 572
+============================================= Turn 78 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT is legal, does not disturb the high tiles (64, 32, 16), and creates an empty cell at (4,4) which can be useful for future merges.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     4 |     2 |     8 |     4 |
++-------+-------+-------+-------+
+|     2 |    32 |    16 |       |
++-------+-------+-------+-------+
+|    64 |     4 |     2 |       |
++-------+-------+-------+-------+
+|     2 |    16 |     2 |       |
++-------+-------+-------+-------+
+
+Score: 572
+============================================= Turn 79 =============================================
+LLM response:
+<response>
+  <reasoning>UP merges the two 2s in column 3 into a 4, giving a reward of 4 and creating two adjacent 4s that can merge into 8 on the next move.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     4 |     2 |     8 |     4 |
++-------+-------+-------+-------+
+|     2 |    32 |    16 |       |
++-------+-------+-------+-------+
+|    64 |     4 |     4 |     2 |
++-------+-------+-------+-------+
+|     2 |    16 |       |       |
++-------+-------+-------+-------+
+
+Score: 576
+============================================= Turn 80 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT creates a merge of the two 4s in row 3, yielding a reward of 8 and improving the board structure.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     4 |     2 |     8 |     4 |
++-------+-------+-------+-------+
+|     2 |    32 |    16 |       |
++-------+-------+-------+-------+
+|    64 |     8 |     2 |       |
++-------+-------+-------+-------+
+|     2 |    16 |       |     2 |
++-------+-------+-------+-------+
+
+Score: 584
+============================================= Turn 81 =============================================
+LLM response:
+<response>
+  <reasoning>DOWN creates a pair of adjacent 2’s in the bottom row, setting up a future merge while keeping the large tiles near the left side.</reasoning>
+  <action>DOWN</action>
+</response>
+Move: DOWN
++-------+-------+-------+-------+
+|     4 |     2 |       |     2 |
++-------+-------+-------+-------+
+|     2 |    32 |     8 |       |
++-------+-------+-------+-------+
+|    64 |     8 |    16 |     4 |
++-------+-------+-------+-------+
+|     2 |    16 |     2 |     2 |
++-------+-------+-------+-------+
+
+Score: 584
+============================================= Turn 82 =============================================
+LLM response:
+<response>
+  <reasoning>Right move creates two merges (4+4 in rows 0 and 3) and keeps the high tiles (64, 32) near the left side while moving zeros to the left, setting up the 64 tile to move to the top-left corner on the next move.</reasoning>
+  <action>RIGHT</action>
+</response>
+Move: RIGHT
++-------+-------+-------+-------+
+|       |       |     4 |     4 |
++-------+-------+-------+-------+
+|     2 |     2 |    32 |     8 |
++-------+-------+-------+-------+
+|    64 |     8 |    16 |     4 |
++-------+-------+-------+-------+
+|       |     2 |    16 |     4 |
++-------+-------+-------+-------+
+
+Score: 592
+============================================= Turn 83 =============================================
+LLM response:
+<response>
+  <reasoning>UP merges 16+16=32 and 4+4=8 for a reward of 40, giving a strong board with many empty cells and potential for further merges.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     2 |     2 |     4 |     4 |
++-------+-------+-------+-------+
+|    64 |     8 |    32 |     8 |
++-------+-------+-------+-------+
+|       |     2 |    32 |     8 |
++-------+-------+-------+-------+
+|       |       |       |     2 |
++-------+-------+-------+-------+
+
+Score: 632
+============================================= Turn 84 =============================================
+LLM response:
+<response>
+  <reasoning>UP creates two merges (32+32=64, 8+8=16) for a reward of 80, more than any other legal move.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     2 |     2 |     4 |     4 |
++-------+-------+-------+-------+
+|    64 |     8 |    64 |    16 |
++-------+-------+-------+-------+
+|       |     2 |     2 |     2 |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+
+Score: 712
+============================================= Turn 85 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT creates two merges (2+2 in rows 0 and 2), preserves many empty cells, and keeps the high tiles (64s) near the left side, which is preferable for building a monotonic layout.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     4 |     8 |       |       |
++-------+-------+-------+-------+
+|    64 |     8 |    64 |    16 |
++-------+-------+-------+-------+
+|     4 |     2 |       |       |
++-------+-------+-------+-------+
+|       |     2 |       |       |
++-------+-------+-------+-------+
+
+Score: 728
+============================================= Turn 86 =============================================
+LLM response:
+<response>
+  <reasoning>UP merges two pairs (8+8→16 and 2+2→4), freeing space and keeping larger tiles (64) in the upper region.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     4 |    16 |    64 |    16 |
++-------+-------+-------+-------+
+|    64 |     4 |     2 |       |
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+
+Score: 748
+============================================= Turn 87 =============================================
+LLM response:
+<response>
+  <reasoning>Only DOWN changes the board; all other directions leave it unchanged.</reasoning>
+  <action>DOWN</action>
+</response>
+Move: DOWN
++-------+-------+-------+-------+
+|       |       |       |     2 |
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+|    64 |    16 |    64 |       |
++-------+-------+-------+-------+
+|     4 |     4 |     2 |    16 |
++-------+-------+-------+-------+
+
+Score: 748
+============================================= Turn 88 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT creates a merge (4+4→8) and leaves many empty cells while preserving a useful ascending column (2,4,64,8). It also keeps the large 64 tiles in the same row for future merging. Other moves either produce fewer empty cells or no immediate merge.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     2 |     2 |       |       |
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+|    64 |    16 |    64 |       |
++-------+-------+-------+-------+
+|     8 |     2 |    16 |       |
++-------+-------+-------+-------+
+
+Score: 756
+============================================= Turn 89 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges the two 2s into a 4, creating a pair of 4s that can merge next move and keeps high tiles left for easier future combinations.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+|     4 |       |       |     2 |
++-------+-------+-------+-------+
+|    64 |    16 |    64 |       |
++-------+-------+-------+-------+
+|     8 |     2 |    16 |       |
++-------+-------+-------+-------+
+
+Score: 760
+============================================= Turn 90 =============================================
+LLM response:
+<response>
+  <reasoning>UP merges the two 4‑tiles into an 8, giving a reward and creating many empty cells for future moves.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     8 |    16 |    64 |     2 |
++-------+-------+-------+-------+
+|    64 |     2 |    16 |       |
++-------+-------+-------+-------+
+|     8 |       |       |       |
++-------+-------+-------+-------+
+|       |       |     2 |       |
++-------+-------+-------+-------+
+
+Score: 768
+============================================= Turn 91 =============================================
+LLM response:
+<response>
+  <reasoning>RIGHT creates a favorable configuration for a future merge (2+2) and keeps high tiles stable.</reasoning>
+  <action>RIGHT</action>
+</response>
+Move: RIGHT
++-------+-------+-------+-------+
+|     8 |    16 |    64 |     2 |
++-------+-------+-------+-------+
+|       |    64 |     2 |    16 |
++-------+-------+-------+-------+
+|       |     2 |       |     8 |
++-------+-------+-------+-------+
+|       |       |       |     2 |
++-------+-------+-------+-------+
+
+Score: 768
+============================================= Turn 92 =============================================
+LLM response:
+<response>
+  <reasoning>Only DOWN changes the board; all other moves are invalid.</reasoning>
+  <action>DOWN</action>
+</response>
+Move: DOWN
++-------+-------+-------+-------+
+|     2 |       |       |     2 |
++-------+-------+-------+-------+
+|       |    16 |       |    16 |
++-------+-------+-------+-------+
+|       |    64 |    64 |     8 |
++-------+-------+-------+-------+
+|     8 |     2 |     2 |     2 |
++-------+-------+-------+-------+
+
+Score: 768
+============================================= Turn 93 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges 2+2 into 4, 16+16 into 32, 64+64 into 128, and another 2+2 into 4, giving a high reward and a compact arrangement of large tiles on the left.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+|    32 |     2 |       |       |
++-------+-------+-------+-------+
+|   128 |     8 |       |       |
++-------+-------+-------+-------+
+|     8 |     4 |     2 |       |
++-------+-------+-------+-------+
+
+Score: 936
+============================================= Turn 94 =============================================
+LLM response:
+<response>
+  <reasoning>Only the UP move changes the board; other directions leave the state unchanged.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     4 |     2 |     2 |       |
++-------+-------+-------+-------+
+|    32 |     8 |       |       |
++-------+-------+-------+-------+
+|   128 |     4 |       |       |
++-------+-------+-------+-------+
+|     8 |     2 |       |       |
++-------+-------+-------+-------+
+
+Score: 936
+============================================= Turn 95 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges the two 2's into a 4, keeps the high tiles in the top-left corner, and preserves many empty cells for future moves.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     4 |     4 |       |       |
++-------+-------+-------+-------+
+|    32 |     8 |       |     2 |
++-------+-------+-------+-------+
+|   128 |     4 |       |       |
++-------+-------+-------+-------+
+|     8 |     2 |       |       |
++-------+-------+-------+-------+
+
+Score: 940
+============================================= Turn 96 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges the two 4s into an 8, preserves the large 128 tile in the corner, and keeps the board more compact for future merges.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     8 |       |       |       |
++-------+-------+-------+-------+
+|    32 |     8 |     2 |       |
++-------+-------+-------+-------+
+|   128 |     4 |       |       |
++-------+-------+-------+-------+
+|     8 |     2 |       |     2 |
++-------+-------+-------+-------+
+
+Score: 948
+============================================= Turn 97 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges the two 2's into a 4, giving a reward of 4 and increasing empty cells. It also keeps the large tiles (128, 32, 8) in the left column, preserving a strong structure for future merges.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     8 |       |       |       |
++-------+-------+-------+-------+
+|    32 |     8 |     2 |       |
++-------+-------+-------+-------+
+|   128 |     4 |       |       |
++-------+-------+-------+-------+
+|     8 |     4 |     2 |       |
++-------+-------+-------+-------+
+
+Score: 952
+============================================= Turn 98 =============================================
+LLM response:
+<response>
+  <reasoning>UP merges two pairs (4+4 → 8 and 2+2 → 4) for a reward of 12, creating a more monotonic top‑left structure and freeing space at the bottom.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     8 |     8 |     4 |       |
++-------+-------+-------+-------+
+|    32 |     8 |       |       |
++-------+-------+-------+-------+
+|   128 |       |       |       |
++-------+-------+-------+-------+
+|     8 |       |     2 |       |
++-------+-------+-------+-------+
+
+Score: 964
+============================================= Turn 99 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT creates a merge of the two 8s into a 16, increases empty cells, and keeps the high tiles (32, 128) aligned on the left for future merges.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|    16 |     4 |       |       |
++-------+-------+-------+-------+
+|    32 |     8 |     2 |       |
++-------+-------+-------+-------+
+|   128 |       |       |       |
++-------+-------+-------+-------+
+|     8 |     2 |       |       |
++-------+-------+-------+-------+
+
+Score: 980
+============================================= Turn 100 =============================================
+LLM response:
+<response>
+  <reasoning>DOWN moves the two 2‑tiles to the bottom row, creating an adjacent pair that can merge on the next move, while keeping the larger tiles in place.</reasoning>
+  <action>DOWN</action>
+</response>
+Move: DOWN
++-------+-------+-------+-------+
+|    16 |       |       |       |
++-------+-------+-------+-------+
+|    32 |     4 |       |     2 |
++-------+-------+-------+-------+
+|   128 |     8 |       |       |
++-------+-------+-------+-------+
+|     8 |     2 |     2 |       |
++-------+-------+-------+-------+
+
+Score: 980
+============================================= Turn 101 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges the two 2's into a 4, increases reward, keeps large tiles (128, 32, 16) near the left corner, and preserves many empty cells.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|    16 |       |       |     2 |
++-------+-------+-------+-------+
+|    32 |     4 |     2 |       |
++-------+-------+-------+-------+
+|   128 |     8 |       |       |
++-------+-------+-------+-------+
+|     8 |     4 |       |       |
++-------+-------+-------+-------+
+
+Score: 984
+============================================= Turn 102 =============================================
+LLM response:
+<response>
+  <reasoning>Choosing DOWN will shift the two '2' tiles into the same row, setting up an immediate merge on the next move and preserving the left‑aligned structure of the larger tiles.</reasoning>
+  <action>DOWN</action>
+</response>
+Move: DOWN
++-------+-------+-------+-------+
+|    16 |       |     2 |       |
++-------+-------+-------+-------+
+|    32 |     4 |       |       |
++-------+-------+-------+-------+
+|   128 |     8 |       |       |
++-------+-------+-------+-------+
+|     8 |     4 |     2 |     2 |
++-------+-------+-------+-------+
+
+Score: 984
+============================================= Turn 103 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges the two 2s on the bottom row to a 4 while keeping the high tiles (16, 32, 128, 8) in the left column intact, preserving a strong structure for future merges.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|    16 |     2 |       |       |
++-------+-------+-------+-------+
+|    32 |     4 |       |       |
++-------+-------+-------+-------+
+|   128 |     8 |       |     2 |
++-------+-------+-------+-------+
+|     8 |     4 |     4 |       |
++-------+-------+-------+-------+
+
+Score: 988
+============================================= Turn 104 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT creates a merge (8+8→8) and preserves a monotonic decreasing layout with the largest tiles in the left‑top corner.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|    16 |     2 |       |       |
++-------+-------+-------+-------+
+|    32 |     4 |       |       |
++-------+-------+-------+-------+
+|   128 |     8 |     2 |     2 |
++-------+-------+-------+-------+
+|     8 |     8 |       |       |
++-------+-------+-------+-------+
+
+Score: 996
+============================================= Turn 105 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT creates two merges (4 and 16) for a reward of 20, keeps the large 128 tile in the left column, and preserves a more compact, monotonic layout.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|    16 |     2 |       |       |
++-------+-------+-------+-------+
+|    32 |     4 |       |       |
++-------+-------+-------+-------+
+|   128 |     8 |     4 |     2 |
++-------+-------+-------+-------+
+|    16 |       |       |       |
++-------+-------+-------+-------+
+
+Score: 1016
+============================================= Turn 106 =============================================
+LLM response:
+<response>
+  <reasoning>RIGHT keeps the board in a more monotonic, structured state, preserving the decreasing sequence in row 2 and aligning tiles for future merges.</reasoning>
+  <action>RIGHT</action>
+</response>
+Move: RIGHT
++-------+-------+-------+-------+
+|       |       |    16 |     2 |
++-------+-------+-------+-------+
+|       |       |    32 |     4 |
++-------+-------+-------+-------+
+|   128 |     8 |     4 |     2 |
++-------+-------+-------+-------+
+|       |     2 |       |    16 |
++-------+-------+-------+-------+
+
+Score: 1016
+============================================= Turn 107 =============================================
+LLM response:
+<response>
+  <reasoning>Move UP keeps the 128 tile in the top‑left corner and compresses the board upward, preserving potential future merges while maintaining a strong corner strategy.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|   128 |     8 |    16 |     2 |
++-------+-------+-------+-------+
+|       |     2 |    32 |     4 |
++-------+-------+-------+-------+
+|       |       |     4 |     2 |
++-------+-------+-------+-------+
+|       |     2 |       |    16 |
++-------+-------+-------+-------+
+
+Score: 1016
+============================================= Turn 108 =============================================
+LLM response:
+<response>
+  <reasoning>DOWN creates a merge of the two 2's into a 4, yields more empty cells, and keeps the large tiles stable.</reasoning>
+  <action>DOWN</action>
+</response>
+Move: DOWN
++-------+-------+-------+-------+
+|       |       |       |     2 |
++-------+-------+-------+-------+
+|     2 |       |    16 |     4 |
++-------+-------+-------+-------+
+|       |     8 |    32 |     2 |
++-------+-------+-------+-------+
+|   128 |     4 |     4 |    16 |
++-------+-------+-------+-------+
+
+Score: 1020
+============================================= Turn 109 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges the two 4s in the bottom row into an 8, creates more empty space, and sets up a vertical pair of 2s that can merge on the next UP move.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     2 |       |       |       |
++-------+-------+-------+-------+
+|     2 |    16 |     4 |       |
++-------+-------+-------+-------+
+|     8 |    32 |     2 |     2 |
++-------+-------+-------+-------+
+|   128 |     8 |    16 |       |
++-------+-------+-------+-------+
+
+Score: 1028
+============================================= Turn 110 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges the two 2s in row 2 into a 4 and preserves the 128 in the bottom‑left corner, creating two potential merges for the next turn (2+2 and 4+4). It also keeps many empty cells for flexibility.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     2 |       |       |       |
++-------+-------+-------+-------+
+|     2 |    16 |     4 |     2 |
++-------+-------+-------+-------+
+|     8 |    32 |     4 |       |
++-------+-------+-------+-------+
+|   128 |     8 |    16 |       |
++-------+-------+-------+-------+
+
+Score: 1032
+============================================= Turn 111 =============================================
+LLM response:
+<response>
+  <reasoning>DOWN creates two merges (4 and 8) for a reward of 12, leaving many empty cells and a favorable layout for future moves.</reasoning>
+  <action>DOWN</action>
+</response>
+Move: DOWN
++-------+-------+-------+-------+
+|       |       |     2 |       |
++-------+-------+-------+-------+
+|     4 |    16 |       |       |
++-------+-------+-------+-------+
+|     8 |    32 |     8 |       |
++-------+-------+-------+-------+
+|   128 |     8 |    16 |     2 |
++-------+-------+-------+-------+
+
+Score: 1044
+============================================= Turn 112 =============================================
+LLM response:
+<response>
+  <reasoning>UP creates the most empty cells (four), keeps the high tiles stable, and brings the two 2‑tiles next to each other for a potential merge on the next turn.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     4 |    16 |     2 |     2 |
++-------+-------+-------+-------+
+|     8 |    32 |     8 |       |
++-------+-------+-------+-------+
+|   128 |     8 |    16 |     2 |
++-------+-------+-------+-------+
+|       |       |       |       |
++-------+-------+-------+-------+
+
+Score: 1044
+============================================= Turn 113 =============================================
+LLM response:
+<response>
+  <reasoning>All moves are legal. DOWN moves the 128 tile to the bottom-left corner, clusters remaining tiles in the lower rows, and merges the two 2s into a 4 at the bottom-right, creating a strong, compact position.</reasoning>
+  <action>DOWN</action>
+</response>
+Move: DOWN
++-------+-------+-------+-------+
+|       |     2 |       |       |
++-------+-------+-------+-------+
+|     4 |    16 |     2 |       |
++-------+-------+-------+-------+
+|     8 |    32 |     8 |       |
++-------+-------+-------+-------+
+|   128 |     8 |    16 |     4 |
++-------+-------+-------+-------+
+
+Score: 1048
+============================================= Turn 114 =============================================
+LLM response:
+<response>
+  <reasoning>UP moves the 4 into the top-left corner and creates a pair of adjacent 2's in the first row, setting up future merges while preserving empty cells.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     4 |     2 |     2 |     4 |
++-------+-------+-------+-------+
+|     8 |    16 |     8 |       |
++-------+-------+-------+-------+
+|   128 |    32 |    16 |       |
++-------+-------+-------+-------+
+|       |     8 |       |     2 |
++-------+-------+-------+-------+
+
+Score: 1048
+============================================= Turn 115 =============================================
+LLM response:
+<response>
+  <reasoning>Only LEFT or RIGHT produce a merge of the two 2‑tiles into a 4, giving a reward of 4. Both moves leave the board in the same state and preserve 3 empty cells, which is better than the other legal moves that give no reward.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     4 |     4 |     4 |       |
++-------+-------+-------+-------+
+|     8 |    16 |     8 |       |
++-------+-------+-------+-------+
+|   128 |    32 |    16 |       |
++-------+-------+-------+-------+
+|     8 |     2 |     2 |       |
++-------+-------+-------+-------+
+
+Score: 1052
+============================================= Turn 116 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges two 4s and two 2s, keeps the 128 tile in the left column for stability, and creates empty space on the right for future moves.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     8 |     4 |     2 |       |
++-------+-------+-------+-------+
+|     8 |    16 |     8 |       |
++-------+-------+-------+-------+
+|   128 |    32 |    16 |       |
++-------+-------+-------+-------+
+|     8 |     4 |       |       |
++-------+-------+-------+-------+
+
+Score: 1064
+============================================= Turn 117 =============================================
+LLM response:
+<response>
+  <reasoning>UP merges the two 8s in the first column, giving a 16 tile and changing the board. RIGHT would only shift tiles with no merges.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|    16 |     4 |     2 |     2 |
++-------+-------+-------+-------+
+|   128 |    16 |     8 |       |
++-------+-------+-------+-------+
+|     8 |    32 |    16 |       |
++-------+-------+-------+-------+
+|       |     4 |       |       |
++-------+-------+-------+-------+
+
+Score: 1080
+============================================= Turn 118 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT creates a merge of two 2's into an 8, improving the score while keeping the highest tile (128) near the corner and preserving many empty cells.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|    16 |     4 |     4 |     2 |
++-------+-------+-------+-------+
+|   128 |    16 |     8 |       |
++-------+-------+-------+-------+
+|     8 |    32 |    16 |       |
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+
+Score: 1084
+============================================= Turn 119 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT creates a merge (4+4=8) and preserves many empty cells, giving immediate reward and good future flexibility.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|    16 |     8 |     2 |       |
++-------+-------+-------+-------+
+|   128 |    16 |     8 |     2 |
++-------+-------+-------+-------+
+|     8 |    32 |    16 |       |
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+
+Score: 1092
+============================================= Turn 120 =============================================
+LLM response:
+<response>
+  <reasoning>UP merges the two 2's in the top row into a 4, giving a reward and preserving the large tiles.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|    16 |     8 |     2 |     2 |
++-------+-------+-------+-------+
+|   128 |    16 |     8 |       |
++-------+-------+-------+-------+
+|     8 |    32 |    16 |     2 |
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+
+Score: 1092
+============================================= Turn 121 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges the two 2's in the top row, giving a reward of 4 and keeps the large 128 tile in place.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|    16 |     8 |     4 |       |
++-------+-------+-------+-------+
+|   128 |    16 |     8 |       |
++-------+-------+-------+-------+
+|     8 |    32 |    16 |     2 |
++-------+-------+-------+-------+
+|     4 |       |     2 |       |
++-------+-------+-------+-------+
+
+Score: 1096
+============================================= Turn 122 =============================================
+LLM response:
+<response>
+  <reasoning>RIGHT creates a vertical pair of 2's (at (2,3) and (3,3)) that can merge next turn, while keeping the 128 tile adjacent to a 16 and preserving most empty cells.</reasoning>
+  <action>RIGHT</action>
+</response>
+Move: RIGHT
++-------+-------+-------+-------+
+|     2 |    16 |     8 |     4 |
++-------+-------+-------+-------+
+|       |   128 |    16 |     8 |
++-------+-------+-------+-------+
+|     8 |    32 |    16 |     2 |
++-------+-------+-------+-------+
+|       |       |     4 |     2 |
++-------+-------+-------+-------+
+
+Score: 1096
+============================================= Turn 123 =============================================
+LLM response:
+<response>
+  <reasoning>UP creates two merges (32 and 4), preserves the large 128 near the top, and leaves many empty cells for future growth.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     2 |    16 |     8 |     4 |
++-------+-------+-------+-------+
+|     8 |   128 |    32 |     8 |
++-------+-------+-------+-------+
+|       |    32 |     4 |     4 |
++-------+-------+-------+-------+
+|       |       |     2 |       |
++-------+-------+-------+-------+
+
+Score: 1132
+============================================= Turn 124 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT creates one merge (4+4=8) and preserves the high tiles' arrangement, giving immediate reward while keeping the board in a good state.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     2 |    16 |     8 |     4 |
++-------+-------+-------+-------+
+|     8 |   128 |    32 |     8 |
++-------+-------+-------+-------+
+|    32 |     8 |       |       |
++-------+-------+-------+-------+
+|     2 |       |     2 |       |
++-------+-------+-------+-------+
+
+Score: 1140
+============================================= Turn 125 =============================================
+LLM response:
+<response>
+  <reasoning>Both LEFT and RIGHT create a merge of two 2s into a 4. LEFT moves the merge to the bottom-left corner, keeping the larger tiles unchanged and preserving empty space on the right side. This is a neutral but slightly preferable choice.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     2 |    16 |     8 |     4 |
++-------+-------+-------+-------+
+|     8 |   128 |    32 |     8 |
++-------+-------+-------+-------+
+|    32 |     8 |       |       |
++-------+-------+-------+-------+
+|     4 |       |       |     2 |
++-------+-------+-------+-------+
+
+Score: 1144
+============================================= Turn 126 =============================================
+LLM response:
+<response>
+  <reasoning>RIGHT will shift the 8 at (2,4) down next move to merge with the 8 at (3,4), creating a 16 and improving the board.</reasoning>
+  <action>RIGHT</action>
+</response>
+Move: RIGHT
++-------+-------+-------+-------+
+|     2 |    16 |     8 |     4 |
++-------+-------+-------+-------+
+|     8 |   128 |    32 |     8 |
++-------+-------+-------+-------+
+|       |       |    32 |     8 |
++-------+-------+-------+-------+
+|       |     2 |     4 |     2 |
++-------+-------+-------+-------+
+
+Score: 1144
+============================================= Turn 127 =============================================
+LLM response:
+<response>
+  <reasoning>UP merges two 32s into a 64 and two 8s into a 16, creating high tiles while clearing the bottom row.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     2 |    16 |     8 |     4 |
++-------+-------+-------+-------+
+|     8 |   128 |    64 |    16 |
++-------+-------+-------+-------+
+|       |     2 |     4 |     2 |
++-------+-------+-------+-------+
+|       |       |       |     2 |
++-------+-------+-------+-------+
+
+Score: 1224
+============================================= Turn 128 =============================================
+LLM response:
+<response>
+  <reasoning>DOWN creates a merge (two 2's become a 4) and frees up many empty cells, while LEFT would not merge anything. Therefore DOWN is the better move.</reasoning>
+  <action>DOWN</action>
+</response>
+Move: DOWN
++-------+-------+-------+-------+
+|       |       |     2 |       |
++-------+-------+-------+-------+
+|       |    16 |     8 |     4 |
++-------+-------+-------+-------+
+|     2 |   128 |    64 |    16 |
++-------+-------+-------+-------+
+|     8 |     2 |     4 |     4 |
++-------+-------+-------+-------+
+
+Score: 1228
+============================================= Turn 129 =============================================
+LLM response:
+<response>
+  <reasoning>UP moves tiles upward, creating more empty cells and aligning the high tiles (128 and 64) closer together for future merges. It is a legal move that changes the board state.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     2 |    16 |     2 |     4 |
++-------+-------+-------+-------+
+|     8 |   128 |     8 |    16 |
++-------+-------+-------+-------+
+|     2 |     2 |    64 |     4 |
++-------+-------+-------+-------+
+|       |       |     4 |       |
++-------+-------+-------+-------+
+
+Score: 1228
+============================================= Turn 130 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT creates an immediate merge (2+2 → 4) and preserves many empty cells, setting up future merges while avoiding a lock.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     2 |    16 |     2 |     4 |
++-------+-------+-------+-------+
+|     8 |   128 |     8 |    16 |
++-------+-------+-------+-------+
+|     4 |    64 |     4 |     2 |
++-------+-------+-------+-------+
+|     4 |       |       |       |
++-------+-------+-------+-------+
+
+Score: 1232
+============================================= Turn 131 =============================================
+LLM response:
+<response>
+  <reasoning>Up move merges the two 4s in the first column into an 8, creating a new 8 at row 3 while leaving all other tiles unchanged and maximizing empty space for future moves.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     2 |    16 |     2 |     4 |
++-------+-------+-------+-------+
+|     8 |   128 |     8 |    16 |
++-------+-------+-------+-------+
+|     8 |    64 |     4 |     2 |
++-------+-------+-------+-------+
+|       |       |     2 |       |
++-------+-------+-------+-------+
+
+Score: 1240
+============================================= Turn 132 =============================================
+LLM response:
+<response>
+  <reasoning>UP creates a merge (8+8 → 16) and keeps the large tiles (128, 64) near the top-left corner, creating empty space for future merges.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     2 |    16 |     2 |     4 |
++-------+-------+-------+-------+
+|    16 |   128 |     8 |    16 |
++-------+-------+-------+-------+
+|       |    64 |     4 |     2 |
++-------+-------+-------+-------+
+|       |     2 |     2 |       |
++-------+-------+-------+-------+
+
+Score: 1256
+============================================= Turn 133 =============================================
+LLM response:
+<response>
+  <reasoning>DOWN creates a new 4×4 board with a vertical pair of 4s that can merge next move, keeps the 128 stable, and yields the same immediate reward as LEFT or RIGHT while preserving more empty cells.</reasoning>
+  <action>DOWN</action>
+</response>
+Move: DOWN
++-------+-------+-------+-------+
+|     2 |    16 |     2 |       |
++-------+-------+-------+-------+
+|       |   128 |     8 |     4 |
++-------+-------+-------+-------+
+|     2 |    64 |     4 |    16 |
++-------+-------+-------+-------+
+|    16 |     2 |     2 |     2 |
++-------+-------+-------+-------+
+
+Score: 1256
+============================================= Turn 134 =============================================
+LLM response:
+<response>
+  <reasoning>Both UP and DOWN produce one merge of 4, but UP places a 4 in the top‑left corner, keeping the board more compact and preserving the 16 at (0,1). This gives a slightly better structure for future merges.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     4 |    16 |     2 |     4 |
++-------+-------+-------+-------+
+|    16 |   128 |     8 |    16 |
++-------+-------+-------+-------+
+|       |    64 |     4 |     2 |
++-------+-------+-------+-------+
+|     2 |     2 |     2 |       |
++-------+-------+-------+-------+
+
+Score: 1260
+============================================= Turn 135 =============================================
+LLM response:
+<response>
+  <reasoning>LEFT merges the three 2s in the bottom row into a 4, giving a reward of 4 and leaving three empty cells. No other move offers a merge.</reasoning>
+  <action>LEFT</action>
+</response>
+Move: LEFT
++-------+-------+-------+-------+
+|     4 |    16 |     2 |     4 |
++-------+-------+-------+-------+
+|    16 |   128 |     8 |    16 |
++-------+-------+-------+-------+
+|    64 |     4 |     2 |       |
++-------+-------+-------+-------+
+|     4 |     2 |     2 |       |
++-------+-------+-------+-------+
+
+Score: 1264
+============================================= Turn 136 =============================================
+LLM response:
+<response>
+  <reasoning>UP merges two 2s into a 4 at (2,2), creating adjacent 4s that can merge next move, while keeping large tiles stable.</reasoning>
+  <action>UP</action>
+</response>
+Move: UP
++-------+-------+-------+-------+
+|     4 |    16 |     2 |     4 |
++-------+-------+-------+-------+
+|    16 |   128 |     8 |    16 |
++-------+-------+-------+-------+
+|    64 |     4 |     4 |     2 |
++-------+-------+-------+-------+
+|     4 |     2 |       |       |
++-------+-------+-------+-------+
+
+Score: 1268
+============================================= Turn 137 =============================================
+LLM response:

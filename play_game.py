@@ -5,6 +5,7 @@ import time
 from typing import Callable
 
 from base_agent import BaseAgent
+from claude_agent import ClaudeAgent
 from engine import Game2048, POSSIBLE_MOVES, print_board
 from expectimax_agent import ExpectimaxAgent
 from openai_agent import OpenAIAgent
@@ -15,6 +16,7 @@ AGENT_FACTORIES: dict[str, Callable[[int | None], BaseAgent]] = {
     "random": lambda seed: RandomAgent(random_seed=seed),
     "expectimax": lambda seed: ExpectimaxAgent(),
     "openai": lambda seed: OpenAIAgent(),
+    "claude": lambda seed: ClaudeAgent(),
     "vllm": lambda seed: VLLMAgent(),
 }
 

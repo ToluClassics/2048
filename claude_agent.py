@@ -1,5 +1,6 @@
 import os
 from typing import Optional
+from urllib.error import HTTPError, URLError
 
 from tenacity import retry, retry_if_exception, stop_after_attempt, wait_fixed
 
@@ -14,17 +15,20 @@ from base_agent import BaseAgent, Board
 from engine import POSSIBLE_MOVES, check_move_valid
 
 try:
-    from openai import APIConnectionError, APIStatusError, OpenAI
+    from anthropic import APIConnectionError, APIStatusError, Anthropic
 except ImportError:
     APIConnectionError = None
     APIStatusError = None
-    OpenAI = None
+    Anthropic = None
 
-DEFAULT_VLLM_BASE_URL = "http://localhost:8000/v1"
 RETRYABLE_HTTP_STATUS_CODES = {408, 429, 500, 502, 503, 504}
 
 
 def is_retryable_request_error(exc: BaseException) -> bool:
+    if isinstance(exc, (URLError,)):
+        return True
+    if isinstance(exc, HTTPError):
+        return exc.code in RETRYABLE_HTTP_STATUS_CODES
     if APIConnectionError is not None and isinstance(exc, APIConnectionError):
         return True
     if APIStatusError is not None and isinstance(exc, APIStatusError):
@@ -32,37 +36,27 @@ def is_retryable_request_error(exc: BaseException) -> bool:
     return False
 
 
-class VLLMAgent(BaseAgent):
+class ClaudeAgent(BaseAgent):
     def __init__(
         self,
-        name: str = "VLLMAgent",
+        name: str = "ClaudeAgent",
         model: Optional[str] = None,
         api_key: Optional[str] = None,
-        api_base_url: Optional[str] = None,
-        temperature: float = 0.5,
+        temperature: float = 0.1,
+        max_tokens: int = 1024,
         timeout_seconds: float = 300.0,
         history_size: Optional[int] = 3,
     ):
-        resolved_base_url = (
-            api_base_url
-            or os.getenv("VLLM_API_BASE_URL")
-            or os.getenv("LLM_API_BASE_URL")
-            or DEFAULT_VLLM_BASE_URL
-        )
         super().__init__(name)
-        self.model = model or os.getenv("LLM_MODEL")
-        self.api_key = api_key or os.getenv("VLLM_API_KEY") or os.getenv("OPENAI_API_KEY") or "token-abc123"
-        self.api_base_url = resolved_base_url.rstrip("/")
-        if self.api_base_url.endswith("/chat/completions"):
-            self.api_base_url = self.api_base_url[: -len("/chat/completions")]
-        elif self.api_base_url.endswith("/completions"):
-            self.api_base_url = self.api_base_url[: -len("/completions")]
+        self.model = model or os.getenv("ANTHROPIC_MODEL") or os.getenv("LLM_MODEL") or "claude-sonnet-4-20250514"
+        self.api_key = api_key or os.getenv("ANTHROPIC_API_KEY")
         self.temperature = temperature
+        self.max_tokens = max_tokens
         self.timeout_seconds = timeout_seconds
         self.history_size = history_size if history_size is not None else int(os.getenv("LLM_HISTORY_SIZE", "3"))
         self.last_response = ""
         self.observation_history: list[dict[str, object]] = []
-        self._client: Optional[OpenAI] = None
+        self._client: Optional[Anthropic] = None
 
     def reset(self) -> None:
         self.last_response = ""
@@ -71,16 +65,17 @@ class VLLMAgent(BaseAgent):
     def _legal_moves(self, board: Board) -> list[str]:
         return [move for move in POSSIBLE_MOVES if check_move_valid(board, move)]
 
-    def _get_client(self) -> OpenAI:
-        if OpenAI is None:
-            raise RuntimeError("The OpenAI Python SDK is not installed. Add the `openai` package to use this path.")
+    def _get_client(self) -> Anthropic:
+        if Anthropic is None:
+            raise RuntimeError(
+                "The Anthropic Python SDK is not installed. Add the `anthropic` package to use this agent."
+            )
 
         if self._client is None:
-            self._client = OpenAI(
-                base_url=self.api_base_url,
-                api_key=self.api_key,
-                timeout=self.timeout_seconds,
-            )
+            client_kwargs: dict[str, object] = {"timeout": self.timeout_seconds}
+            if self.api_key:
+                client_kwargs["api_key"] = self.api_key
+            self._client = Anthropic(**client_kwargs)
 
         return self._client
 
@@ -91,42 +86,22 @@ class VLLMAgent(BaseAgent):
         retry=retry_if_exception(is_retryable_request_error),
     )
     def _request_completion(self, system_prompt: str, user_prompt: str) -> str:
-        if not self.model:
-            raise ValueError("VLLMAgent requires a model. Set LLM_MODEL or pass model=.")
-
         client = self._get_client()
-        completion = client.chat.completions.create(
+        message = client.messages.create(
             model=self.model,
+            max_tokens=self.max_tokens,
             temperature=self.temperature,
+            system=system_prompt,
             messages=[
-                {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
         )
 
-        try:
-            message = completion.choices[0].message
-        except (KeyError, IndexError, TypeError) as exc:
-            raise RuntimeError(f"Unexpected VLLM response shape: {completion}") from exc
+        for block in message.content:
+            if block.type == "text":
+                return block.text
 
-        content = getattr(message, "content", None)
-        if isinstance(content, str) and content:
-            return content
-        if isinstance(content, list):
-            text = "".join(
-                item.text
-                for item in content
-                if getattr(item, "type", None) == "text" and getattr(item, "text", None)
-            )
-            if text:
-                return text
-
-        # Some reasoning models put output in a `reasoning` field with content=None
-        reasoning = getattr(message, "reasoning", None) or getattr(message, "reasoning_content", None)
-        if isinstance(reasoning, str) and reasoning:
-            return reasoning
-
-        raise RuntimeError(f"Unsupported VLLM content format: {message}")
+        raise RuntimeError(f"Unexpected Anthropic response format: {message}")
 
     def get_move(self, board: Board) -> tuple[str, int]:
         legal_moves = self._legal_moves(board)

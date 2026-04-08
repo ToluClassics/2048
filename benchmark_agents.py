@@ -2,6 +2,7 @@ import argparse
 import statistics
 from typing import Iterable
 
+from claude_agent import ClaudeAgent
 from engine import Board
 from openai_agent import OpenAIAgent
 from play_game import AGENT_FACTORIES, play_game
@@ -32,6 +33,8 @@ def _make_agent_factory(
 ):
     if agent_name == "openai":
         return lambda _seed: OpenAIAgent(model=model, api_base_url=api_base_url)
+    if agent_name == "claude":
+        return lambda _seed: ClaudeAgent(model=model)
     if agent_name == "vllm":
         return lambda _seed: VLLMAgent(model=model, api_base_url=api_base_url)
     return AGENT_FACTORIES[agent_name]
