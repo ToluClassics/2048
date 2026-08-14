@@ -56,6 +56,39 @@ class ReplayCapabilityTests(unittest.TestCase):
             with self.assertRaisesRegex(ReplayValidationError, "spawn contract"):
                 validate_replay(changed)
 
+    def test_replay_rejects_a_plausible_spawn_that_disagrees_with_the_seed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "episode.jsonl"
+            play_game(
+                RandomAgent(random_seed=42),
+                max_turns=1,
+                random_seed=42,
+                verbose=False,
+                replay_path=path,
+                source_revision="test-revision",
+            )
+            changed = copy.deepcopy(load_records(path))
+            turn = changed[1]
+            original_spawn = (turn["spawn"]["row"], turn["spawn"]["col"])
+            replacement = next(
+                (row, col)
+                for row in range(4)
+                for col in range(4)
+                if turn["board_after_move"][row][col] == 0
+                and (row, col) != original_spawn
+            )
+            changed_board = copy.deepcopy(turn["board_after_move"])
+            changed_board[replacement[0]][replacement[1]] = 2
+            turn["spawn"] = {"row": replacement[0], "col": replacement[1], "value": 2}
+            turn["board_after"] = changed_board
+            turn["max_tile"] = max(max(row) for row in changed_board)
+            turn["terminal"] = False
+            changed[-1]["final_board"] = changed_board
+            changed[-1]["max_tile"] = turn["max_tile"]
+
+            with self.assertRaisesRegex(ReplayValidationError, "declared seed"):
+                validate_replay(changed)
+
     def test_static_viewer_is_wired_to_a_valid_sample(self):
         root = Path(__file__).resolve().parents[1]
         html = (root / "viewer" / "index.html").read_text(encoding="utf-8")

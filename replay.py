@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from base_agent import BaseAgent, Board
-from engine import MOVE_FUNCTIONS, POSSIBLE_MOVES, check_boards_equal, is_game_over, place_tile
+from engine import Game2048, MOVE_FUNCTIONS, POSSIBLE_MOVES, check_boards_equal, is_game_over, place_tile
 
 SCHEMA_VERSION = "2048.replay.v1"
 ENVIRONMENT_CONTRACT = {
@@ -191,11 +191,18 @@ def validate_replay(records: Iterable[dict[str, Any]]) -> dict[str, Any]:
     if manifest.get("environment") != ENVIRONMENT_CONTRACT:
         raise ReplayValidationError("unsupported environment contract")
 
+    seed = manifest.get("seed")
+    if isinstance(seed, bool) or not isinstance(seed, int):
+        raise ReplayValidationError("manifest seed must be an integer")
+
     current_board = manifest.get("initial_board")
     _validate_board(current_board, "initial_board")
     initial_tiles = [value for row in current_board for value in row if value]
     if initial_tiles != [2]:
         raise ReplayValidationError("initial_board violates the one-2-tile environment contract")
+    seeded_game = Game2048(random_seed=seed)
+    if seeded_game.board != current_board:
+        raise ReplayValidationError("initial_board does not match the declared seed")
     current_score = 0
     turn_count = 0
     valid_actions = 0
@@ -222,6 +229,8 @@ def validate_replay(records: Iterable[dict[str, Any]]) -> dict[str, Any]:
             if expected_valid:
                 expected_after_move = candidate
                 expected_delta = candidate_delta
+            if seeded_game.step(action) is not expected_valid:
+                raise ReplayValidationError(f"turn {turn_count} disagrees with the seeded engine")
         elif action_valid:
             raise ReplayValidationError(f"turn {turn_count} applies an unknown action")
 
@@ -253,9 +262,15 @@ def validate_replay(records: Iterable[dict[str, Any]]) -> dict[str, Any]:
 
         if record.get("board_after") != expected_after:
             raise ReplayValidationError(f"turn {turn_count} has an incorrect final board")
+        if seeded_game.board != expected_after:
+            raise ReplayValidationError(
+                f"turn {turn_count} spawn does not match the declared seed"
+            )
         current_score += expected_delta
         if record.get("score") != current_score:
             raise ReplayValidationError(f"turn {turn_count} has an incorrect cumulative score")
+        if seeded_game.score != current_score:
+            raise ReplayValidationError(f"turn {turn_count} score disagrees with the seeded engine")
         expected_max_tile = max(max(row) for row in expected_after)
         if record.get("max_tile") != expected_max_tile:
             raise ReplayValidationError(f"turn {turn_count} has an incorrect maximum tile")
