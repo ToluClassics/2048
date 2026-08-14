@@ -1,0 +1,137 @@
+{
+  "agents": [
+    "random",
+    "expectimax"
+  ],
+  "environment": {
+    "board_size": 4,
+    "id": "2048-canonical-v1",
+    "initial_tiles": 2,
+    "invalid_action_policy": "consume_turn_without_state_change",
+    "score_definition": "sum_of_merged_tile_values",
+    "spawn_distribution": {
+      "2": 0.9,
+      "4": 0.1
+    },
+    "spawn_rng_order": [
+      "empty_cell_uniform",
+      "tile_value"
+    ]
+  },
+  "inference": {
+    "allow_provider_fallbacks": false,
+    "max_output_tokens": 1024,
+    "provider": null,
+    "reasoning_effort": "low"
+  },
+  "max_turns": 1000,
+  "model": null,
+  "primary_metric": "median_score",
+  "results": {
+    "expectimax": {
+      "episodes": [
+        {
+          "max_tile": 1024,
+          "replay": "replays/expectimax/seed-100.jsonl",
+          "score": 17300,
+          "seed": 100
+        },
+        {
+          "max_tile": 1024,
+          "replay": "replays/expectimax/seed-101.jsonl",
+          "score": 11912,
+          "seed": 101
+        },
+        {
+          "max_tile": 256,
+          "replay": "replays/expectimax/seed-102.jsonl",
+          "score": 3836,
+          "seed": 102
+        },
+        {
+          "max_tile": 2048,
+          "replay": "replays/expectimax/seed-103.jsonl",
+          "score": 20640,
+          "seed": 103
+        },
+        {
+          "max_tile": 512,
+          "replay": "replays/expectimax/seed-104.jsonl",
+          "score": 5056,
+          "seed": 104
+        }
+      ],
+      "games": 5,
+      "model": null,
+      "score_summary": {
+        "avg": 11748.8,
+        "max": 20640,
+        "median": 11912,
+        "min": 3836
+      },
+      "tile_summary": {
+        "avg": 972.8,
+        "max": 2048,
+        "median": 1024,
+        "min": 256
+      }
+    },
+    "random": {
+      "episodes": [
+        {
+          "max_tile": 128,
+          "replay": "replays/random/seed-100.jsonl",
+          "score": 1428,
+          "seed": 100
+        },
+        {
+          "max_tile": 128,
+          "replay": "replays/random/seed-101.jsonl",
+          "score": 1400,
+          "seed": 101
+        },
+        {
+          "max_tile": 128,
+          "replay": "replays/random/seed-102.jsonl",
+          "score": 1120,
+          "seed": 102
+        },
+        {
+          "max_tile": 128,
+          "replay": "replays/random/seed-103.jsonl",
+          "score": 924,
+          "seed": 103
+        },
+        {
+          "max_tile": 128,
+          "replay": "replays/random/seed-104.jsonl",
+          "score": 1168,
+          "seed": 104
+        }
+      ],
+      "games": 5,
+      "model": null,
+      "score_summary": {
+        "avg": 1208.0,
+        "max": 1428,
+        "median": 1168,
+        "min": 924
+      },
+      "tile_summary": {
+        "avg": 128.0,
+        "max": 128,
+        "median": 128,
+        "min": 128
+      }
+    }
+  },
+  "schema_version": "2048.evaluation.v1",
+  "seeds": [
+    100,
+    101,
+    102,
+    103,
+    104
+  ],
+  "source_revision": "3402039a2659a37fbe024e8d9d5f802b21cd90c4"
+}
