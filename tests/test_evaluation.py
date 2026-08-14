@@ -2,6 +2,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from benchmark_agents import run_benchmark, write_evaluation_artifacts
 from build_catalog import build_catalog
@@ -13,13 +14,19 @@ class EvaluationCapabilityTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             output_dir = Path(directory)
             seeds = [100, 101]
-            results = run_benchmark(
-                ["random"],
-                seeds,
-                max_turns=5,
-                output_dir=output_dir,
-                verbose=False,
-            )
+            source_revision = "test-revision"
+            with patch(
+                "benchmark_agents.current_git_revision",
+                return_value=source_revision,
+            ) as revision_snapshot:
+                results = run_benchmark(
+                    ["random"],
+                    seeds,
+                    max_turns=5,
+                    output_dir=output_dir,
+                    verbose=False,
+                )
+            revision_snapshot.assert_called_once_with()
             write_evaluation_artifacts(
                 output_dir,
                 agent_names=["random"],
@@ -31,6 +38,7 @@ class EvaluationCapabilityTests(unittest.TestCase):
                 reasoning_effort="low",
                 provider=None,
                 allow_provider_fallbacks=False,
+                source_revision=source_revision,
                 results=results,
             )
 
@@ -38,9 +46,12 @@ class EvaluationCapabilityTests(unittest.TestCase):
             episodes = summary["results"]["random"]["episodes"]
             self.assertEqual(summary["seeds"], seeds)
             self.assertEqual(summary["primary_metric"], "median_score")
+            self.assertEqual(summary["source_revision"], source_revision)
             self.assertEqual(len(episodes), 2)
             for episode in episodes:
-                validated = validate_replay(load_records(output_dir / episode["replay"]))
+                records = load_records(output_dir / episode["replay"])
+                validated = validate_replay(records)
+                self.assertEqual(records[0]["source"]["revision"], source_revision)
                 self.assertEqual(validated["score"], episode["score"])
             self.assertIn("| random |", (output_dir / "leaderboard.md").read_text())
 

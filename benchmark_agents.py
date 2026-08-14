@@ -74,9 +74,11 @@ def run_benchmark(
     reasoning_effort: str = "low",
     provider: str | None = None,
     allow_provider_fallbacks: bool = False,
+    source_revision: str | None = None,
     verbose: bool = True,
 ) -> dict[str, dict[str, object]]:
     results: dict[str, dict[str, object]] = {}
+    evaluation_revision = source_revision or current_git_revision()
 
     seed_list = list(seeds)
     for agent_name in agent_names:
@@ -108,6 +110,7 @@ def run_benchmark(
                 sleep_seconds=0.0,
                 verbose=verbose,
                 replay_path=replay_path,
+                source_revision=evaluation_revision,
                 environment_id=environment_id,
             )
             scores.append(game.score)
@@ -152,6 +155,7 @@ def write_evaluation_artifacts(
     reasoning_effort: str,
     provider: str | None,
     allow_provider_fallbacks: bool,
+    source_revision: str,
     results: dict[str, dict[str, object]],
 ) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -168,7 +172,7 @@ def write_evaluation_artifacts(
             "provider": provider,
             "allow_provider_fallbacks": allow_provider_fallbacks,
         },
-        "source_revision": current_git_revision(),
+        "source_revision": source_revision,
         "primary_metric": "median_score",
         "results": results,
     }
@@ -276,6 +280,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     seeds = range(args.start_seed, args.start_seed + args.num_games)
+    source_revision = current_git_revision()
     results = run_benchmark(
         args.agents,
         seeds,
@@ -288,6 +293,7 @@ def main() -> int:
         reasoning_effort=args.reasoning_effort,
         provider=args.provider,
         allow_provider_fallbacks=args.allow_provider_fallbacks,
+        source_revision=source_revision,
     )
     write_evaluation_artifacts(
         args.output_dir,
@@ -300,6 +306,7 @@ def main() -> int:
         reasoning_effort=args.reasoning_effort,
         provider=args.provider,
         allow_provider_fallbacks=args.allow_provider_fallbacks,
+        source_revision=source_revision,
         results=results,
     )
 
