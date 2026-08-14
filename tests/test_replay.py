@@ -1,9 +1,12 @@
 import copy
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
 
+import play_game as play_game_module
 from engine import Game2048
 from expectimax_agent import ExpectimaxAgent, evaluate
 from play_game import play_game
@@ -44,12 +47,14 @@ class ReplayCapabilityTests(unittest.TestCase):
         agent = VLLMAgent(
             model="qwen3.5:0.8b",
             max_output_tokens=1024,
+            inference_seed=100,
             reasoning_effort="low",
         )
         description = describe_agent(agent)
 
         self.assertEqual(description["configuration"]["max_output_tokens"], 1024)
         self.assertEqual(description["configuration"]["max_response_attempts"], 1)
+        self.assertEqual(description["configuration"]["inference_seed"], 100)
         self.assertEqual(description["configuration"]["reasoning_effort"], "low")
 
     def test_reasoning_only_response_is_one_invalid_action_not_a_final_answer(self):
@@ -65,7 +70,11 @@ class ReplayCapabilityTests(unittest.TestCase):
                 usage=None,
             )
 
-        agent = VLLMAgent(model="qwen3.5:0.8b", max_output_tokens=1024)
+        agent = VLLMAgent(
+            model="qwen3.5:0.8b",
+            max_output_tokens=1024,
+            inference_seed=100,
+        )
         agent._client = SimpleNamespace(
             chat=SimpleNamespace(completions=SimpleNamespace(create=create))
         )
@@ -76,9 +85,40 @@ class ReplayCapabilityTests(unittest.TestCase):
         self.assertEqual(move, "NONE")
         self.assertEqual(len(requests), 1)
         self.assertEqual(requests[0]["max_tokens"], 1024)
+        self.assertEqual(requests[0]["seed"], 100)
         self.assertEqual(agent.last_reasoning, "still thinking")
         self.assertEqual(agent.last_response, "")
         self.assertEqual(agent.last_response_metadata["finish_reason"], "length")
+
+    def test_vllm_cli_uses_the_environment_seed_for_inference(self):
+        captured = {}
+
+        class FakeVLLMAgent:
+            name = "FakeVLLMAgent"
+
+            def __init__(self, **kwargs):
+                captured.update(kwargs)
+
+        argv = [
+            "play_game.py",
+            "--agent",
+            "vllm",
+            "--model",
+            "test-model",
+            "--seed",
+            "100",
+            "--max-turns",
+            "1",
+        ]
+        with (
+            patch.object(sys, "argv", argv),
+            patch("vllm_agent.VLLMAgent", FakeVLLMAgent),
+            patch.object(play_game_module, "play_game") as run_game,
+        ):
+            self.assertEqual(play_game_module.main(), 0)
+
+        self.assertEqual(captured["inference_seed"], 100)
+        self.assertEqual(run_game.call_args.kwargs["random_seed"], 100)
 
     def test_seeded_episode_records_and_replays_deterministically(self):
         with tempfile.TemporaryDirectory() as directory:

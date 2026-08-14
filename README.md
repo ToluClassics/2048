@@ -86,6 +86,8 @@ The evaluator writes one replay per episode plus deterministic `summary.json` an
 
 For prompted agents, one turn permits exactly one model inference. A response without a parseable final action is recorded as one invalid `NONE` action; the evaluator does not silently spend extra inference calls repairing it. Transport failures may still use the narrowly scoped HTTP retry policy.
 
+For compatible Chat Completions endpoints, each episode also sends its declared environment seed as the inference seed and records it in replay provenance.
+
 ## Reproducible Episode Replays
 
 Add `--record` to produce a versioned JSONL evidence artifact:

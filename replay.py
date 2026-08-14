@@ -45,6 +45,7 @@ def describe_agent(agent: BaseAgent) -> dict[str, Any]:
         "max_tokens",
         "max_output_tokens",
         "max_response_attempts",
+        "inference_seed",
         "reasoning_effort",
         "provider",
         "allow_provider_fallbacks",
