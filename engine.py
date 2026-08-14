@@ -10,6 +10,29 @@ Row = List[int]
 Board = List[Row]
 POSSIBLE_MOVES = ["LEFT", "RIGHT", "UP", "DOWN"]
 
+LITE_ENVIRONMENT_CONTRACT = {
+    "id": "2048-lite-v0.1",
+    "board_size": 4,
+    "initial_tiles": 1,
+    "spawn_distribution": {"2": 1.0},
+    "invalid_action_policy": "consume_turn_without_state_change",
+    "score_definition": "sum_of_merged_tile_values",
+}
+CANONICAL_ENVIRONMENT_CONTRACT = {
+    "id": "2048-canonical-v1",
+    "board_size": 4,
+    "initial_tiles": 2,
+    "spawn_distribution": {"2": 0.9, "4": 0.1},
+    "spawn_rng_order": ["empty_cell_uniform", "tile_value"],
+    "invalid_action_policy": "consume_turn_without_state_change",
+    "score_definition": "sum_of_merged_tile_values",
+}
+ENVIRONMENT_CONTRACTS = {
+    contract["id"]: contract
+    for contract in (LITE_ENVIRONMENT_CONTRACT, CANONICAL_ENVIRONMENT_CONTRACT)
+}
+DEFAULT_ENVIRONMENT_ID = CANONICAL_ENVIRONMENT_CONTRACT["id"]
+
 def clone_board(board: Board) -> Board:
     return copy.deepcopy(board)
 
@@ -55,7 +78,11 @@ def check_empty_tiles(board: Board) -> List[Tuple]:
     
     return empties
 
-def add_random_tile_to_board(board: Board, rng: random.Random) -> Board:
+def add_random_tile_to_board(
+    board: Board,
+    rng: random.Random,
+    spawn_distribution: dict[str, float] | None = None,
+) -> Board:
     """
     Add a random tile to an existing board. First check what the empty cells are 
     on the board and then randomly sample one of them to insert a tile
@@ -69,8 +96,20 @@ def add_random_tile_to_board(board: Board, rng: random.Random) -> Board:
     if not empties:
         return clone_board(board)
 
+    distribution = spawn_distribution or {"2": 1.0}
     cell = rng.choice(empties)
-    board = place_tile(board, 2, cell[0], cell[1])
+    if distribution == {"2": 1.0}:
+        value = 2
+    else:
+        sample = rng.random()
+        cumulative = 0.0
+        value = 2
+        for tile, probability in distribution.items():
+            cumulative += probability
+            value = int(tile)
+            if sample < cumulative:
+                break
+    board = place_tile(board, value, cell[0], cell[1])
     return board
 
 def check_boards_equal(a: Board, b: Board) -> bool:
@@ -184,12 +223,20 @@ MOVE_FUNCTIONS = {
 
 
 class Game2048:
-    def __init__(self, random_seed: int = 42):
+    def __init__(self, random_seed: int = 42, environment_id: str = DEFAULT_ENVIRONMENT_ID):
+        if environment_id not in ENVIRONMENT_CONTRACTS:
+            raise ValueError(f"Unknown environment: {environment_id}")
+        self.environment_contract = copy.deepcopy(ENVIRONMENT_CONTRACTS[environment_id])
         self.rng  = random.Random(random_seed)
         #initialize board
         self.board = [[0] * 4 for _ in range(4)]
         self.score = 0
-        self.board = add_random_tile_to_board(self.board, self.rng)
+        for _ in range(self.environment_contract["initial_tiles"]):
+            self.board = add_random_tile_to_board(
+                self.board,
+                self.rng,
+                self.environment_contract["spawn_distribution"],
+            )
     
     def is_over(self) -> bool:
         return is_game_over(self.board)
@@ -201,7 +248,11 @@ class Game2048:
 
         self.board = new_board
         self.score += score_gain
-        self.board = add_random_tile_to_board(self.board, self.rng)
+        self.board = add_random_tile_to_board(
+            self.board,
+            self.rng,
+            self.environment_contract["spawn_distribution"],
+        )
         return True
 
 
@@ -229,4 +280,3 @@ if __name__ == "__main__":
         # time.sleep(2.0)
     
     print(f"Game over! Final score: {game.score}")
-

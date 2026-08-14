@@ -133,9 +133,11 @@ class ExpectimaxAgent(BaseAgent):
             total = 0.0
             for (r, c) in empties:
                 board_with_2 = place_tile(board, 2, r, c)
+                board_with_4 = place_tile(board, 4, r, c)
 
                 p_cell = 1 / len(empties)
                 total += p_cell * 0.9 * self.explore_future_value(move, board_with_2, depth - 1, is_chance=False)
+                total += p_cell * 0.1 * self.explore_future_value(move, board_with_4, depth - 1, is_chance=False)
 
             self.cache[board_key] = total
             return total
@@ -189,4 +191,3 @@ class ExpectimaxAgent(BaseAgent):
         
 
             
-

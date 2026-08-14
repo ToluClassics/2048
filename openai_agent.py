@@ -45,6 +45,8 @@ class OpenAIAgent(BaseAgent):
         api_key: Optional[str] = None,
         api_base_url: Optional[str] = None,
         temperature: float = 0.1,
+        max_output_tokens: int = 1024,
+        reasoning_effort: str = "low",
         timeout_seconds: float = 300.0,
         history_size: Optional[int] = 3,
     ):
@@ -59,14 +61,21 @@ class OpenAIAgent(BaseAgent):
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
         self.api_base_url = resolved_base_url
         self.temperature = temperature
+        self.max_output_tokens = max_output_tokens
+        self.max_response_attempts = MAX_RESPONSE_PARSE_ATTEMPTS
+        self.reasoning_effort = reasoning_effort
         self.timeout_seconds = timeout_seconds
         self.history_size = history_size if history_size is not None else int(os.getenv("LLM_HISTORY_SIZE", "3"))
         self.last_response = ""
+        self.last_reasoning = ""
+        self.last_response_metadata: dict[str, object] = {}
         self.observation_history: list[dict[str, object]] = []
         self._openai_client: Optional[OpenAI] = None
 
     def reset(self) -> None:
         self.last_response = ""
+        self.last_reasoning = ""
+        self.last_response_metadata = {}
         self.observation_history.clear()
 
     def _legal_moves(self, board: Board) -> list[str]:
@@ -101,8 +110,21 @@ class OpenAIAgent(BaseAgent):
             model=self.model,
             instructions=system_prompt,
             input=user_prompt,
-            reasoning={"effort": "medium"},
+            max_output_tokens=self.max_output_tokens,
+            reasoning={"effort": self.reasoning_effort},
         )
+
+        usage = getattr(response, "usage", None)
+        self.last_response_metadata = {
+            key: value
+            for key, value in {
+                "response_id": getattr(response, "id", None),
+                "model": getattr(response, "model", None),
+                "status": getattr(response, "status", None),
+                "usage": usage.model_dump() if hasattr(usage, "model_dump") else None,
+            }.items()
+            if value is not None
+        }
 
         if getattr(response, "output_text", None):
             return response.output_text
@@ -126,7 +148,7 @@ class OpenAIAgent(BaseAgent):
         current_observation = make_observation(board)
         invalid_response = None
 
-        for _ in range(MAX_RESPONSE_PARSE_ATTEMPTS):
+        for _ in range(self.max_response_attempts):
             user_prompt = build_user_prompt(
                 observation_history=self.observation_history,
                 current_observation=current_observation,

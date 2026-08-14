@@ -40,6 +40,10 @@ class VLLMAgent(BaseAgent):
         api_key: Optional[str] = None,
         api_base_url: Optional[str] = None,
         temperature: float = 0.5,
+        max_output_tokens: int = 1024,
+        reasoning_effort: str = "low",
+        provider: Optional[str] = None,
+        allow_provider_fallbacks: bool = False,
         timeout_seconds: float = 300.0,
         history_size: Optional[int] = 3,
     ):
@@ -51,21 +55,36 @@ class VLLMAgent(BaseAgent):
         )
         super().__init__(name)
         self.model = model or os.getenv("LLM_MODEL")
-        self.api_key = api_key or os.getenv("VLLM_API_KEY") or os.getenv("OPENAI_API_KEY") or "token-abc123"
+        self.api_key = (
+            api_key
+            or os.getenv("VLLM_API_KEY")
+            or os.getenv("OPENROUTER_API_KEY")
+            or os.getenv("OPENAI_API_KEY")
+            or "token-abc123"
+        )
         self.api_base_url = resolved_base_url.rstrip("/")
         if self.api_base_url.endswith("/chat/completions"):
             self.api_base_url = self.api_base_url[: -len("/chat/completions")]
         elif self.api_base_url.endswith("/completions"):
             self.api_base_url = self.api_base_url[: -len("/completions")]
         self.temperature = temperature
+        self.max_output_tokens = max_output_tokens
+        self.max_response_attempts = MAX_RESPONSE_PARSE_ATTEMPTS
+        self.reasoning_effort = reasoning_effort
+        self.provider = provider
+        self.allow_provider_fallbacks = allow_provider_fallbacks
         self.timeout_seconds = timeout_seconds
         self.history_size = history_size if history_size is not None else int(os.getenv("LLM_HISTORY_SIZE", "3"))
         self.last_response = ""
+        self.last_reasoning = ""
+        self.last_response_metadata: dict[str, object] = {}
         self.observation_history: list[dict[str, object]] = []
         self._client: Optional[OpenAI] = None
 
     def reset(self) -> None:
         self.last_response = ""
+        self.last_reasoning = ""
+        self.last_response_metadata = {}
         self.observation_history.clear()
 
     def _legal_moves(self, board: Board) -> list[str]:
@@ -95,19 +114,45 @@ class VLLMAgent(BaseAgent):
             raise ValueError("VLLMAgent requires a model. Set LLM_MODEL or pass model=.")
 
         client = self._get_client()
+        extra_body: dict[str, object] = {"reasoning_effort": self.reasoning_effort}
+        if self.provider:
+            extra_body["provider"] = {
+                "order": [self.provider],
+                "allow_fallbacks": self.allow_provider_fallbacks,
+            }
         completion = client.chat.completions.create(
             model=self.model,
             temperature=self.temperature,
+            max_tokens=self.max_output_tokens,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
+            extra_body=extra_body,
         )
 
         try:
             message = completion.choices[0].message
         except (KeyError, IndexError, TypeError) as exc:
             raise RuntimeError(f"Unexpected VLLM response shape: {completion}") from exc
+
+        reasoning = getattr(message, "reasoning", None) or getattr(
+            message, "reasoning_content", None
+        )
+        self.last_reasoning = reasoning if isinstance(reasoning, str) else ""
+        usage = getattr(completion, "usage", None)
+        usage_data = usage.model_dump() if hasattr(usage, "model_dump") else None
+        self.last_response_metadata = {
+            key: value
+            for key, value in {
+                "response_id": getattr(completion, "id", None),
+                "model": getattr(completion, "model", None),
+                "finish_reason": getattr(message, "finish_reason", None)
+                or getattr(completion.choices[0], "finish_reason", None),
+                "usage": usage_data,
+            }.items()
+            if value is not None
+        }
 
         content = getattr(message, "content", None)
         if isinstance(content, str) and content:
@@ -121,10 +166,10 @@ class VLLMAgent(BaseAgent):
             if text:
                 return text
 
-        # Some reasoning models put output in a `reasoning` field with content=None
-        reasoning = getattr(message, "reasoning", None) or getattr(message, "reasoning_content", None)
+        # Preserve a reasoning-only, length-limited response without pretending it
+        # was a final answer. The caller will count it as an invalid action.
         if isinstance(reasoning, str) and reasoning:
-            return reasoning
+            return ""
 
         raise RuntimeError(f"Unsupported VLLM content format: {message}")
 
@@ -136,7 +181,7 @@ class VLLMAgent(BaseAgent):
         current_observation = make_observation(board)
         invalid_response = None
 
-        for _ in range(MAX_RESPONSE_PARSE_ATTEMPTS):
+        for _ in range(self.max_response_attempts):
             user_prompt = build_user_prompt(
                 observation_history=self.observation_history,
                 current_observation=current_observation,

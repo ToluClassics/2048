@@ -52,6 +52,7 @@ class ClaudeAgent(BaseAgent):
         self.api_key = api_key or os.getenv("ANTHROPIC_API_KEY")
         self.temperature = temperature
         self.max_tokens = max_tokens
+        self.max_response_attempts = MAX_RESPONSE_PARSE_ATTEMPTS
         self.timeout_seconds = timeout_seconds
         self.history_size = history_size if history_size is not None else int(os.getenv("LLM_HISTORY_SIZE", "3"))
         self.last_response = ""
@@ -111,7 +112,7 @@ class ClaudeAgent(BaseAgent):
         current_observation = make_observation(board)
         invalid_response = None
 
-        for _ in range(MAX_RESPONSE_PARSE_ATTEMPTS):
+        for _ in range(self.max_response_attempts):
             user_prompt = build_user_prompt(
                 observation_history=self.observation_history,
                 current_observation=current_observation,

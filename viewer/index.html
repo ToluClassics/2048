@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Inspect a reproducible 2048 agent episode turn by turn." />
+    <title>2048 Episode Replay</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../README.md" aria-label="2048 project">2048<span>/replay</span></a>
+      <div class="header-actions">
+        <select id="catalog-episode" aria-label="Published model episode">
+          <option value="">Published episodes</option>
+        </select>
+        <label class="file-button" for="replay-file">Open JSONL</label>
+        <input id="replay-file" type="file" accept=".jsonl,application/json" />
+        <button id="download" class="quiet-button" type="button">Download JSONL</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="replay-column" aria-label="Episode replay">
+        <div class="eyebrow-row">
+          <p class="eyebrow" id="agent-label">Loading episode…</p>
+          <p class="environment" id="environment-label"></p>
+        </div>
+        <div class="score-row">
+          <div>
+            <span class="metric-label">Score</span>
+            <strong id="score">0</strong>
+          </div>
+          <div>
+            <span class="metric-label">Max tile</span>
+            <strong id="max-tile">2</strong>
+          </div>
+          <div>
+            <span class="metric-label">Turn</span>
+            <strong><span id="turn">0</span><span class="metric-muted"> / </span><span id="turn-total">0</span></strong>
+          </div>
+        </div>
+
+        <div id="board" class="board" role="img" aria-label="2048 board"></div>
+
+        <div class="timeline-block">
+          <div class="timeline-labels">
+            <span>Start</span>
+            <span id="timeline-event">Initial board</span>
+            <span>End</span>
+          </div>
+          <input id="timeline" type="range" min="0" max="0" value="0" aria-label="Replay turn" />
+          <div class="controls" aria-label="Replay controls">
+            <button id="start" type="button" aria-label="Jump to start">↤</button>
+            <button id="previous" type="button" aria-label="Previous turn">←</button>
+            <button id="play" class="primary-control" type="button" aria-label="Play replay">▶</button>
+            <button id="next" type="button" aria-label="Next turn">→</button>
+            <button id="end" type="button" aria-label="Jump to end">↦</button>
+            <select id="speed" aria-label="Playback speed">
+              <option value="1200">0.5×</option>
+              <option value="600" selected>1×</option>
+              <option value="300">2×</option>
+            </select>
+            <button id="copy-link" class="copy-link" type="button">Copy turn link</button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="evidence-column" aria-label="Episode evidence">
+        <section class="panel decision-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Decision evidence</p>
+              <h1 id="action-title">Initial state</h1>
+            </div>
+            <span id="validity" class="status neutral">Ready</span>
+          </div>
+          <dl class="decision-grid">
+            <div><dt>Score delta</dt><dd id="score-delta">—</dd></div>
+            <div><dt>Spawn</dt><dd id="spawn">—</dd></div>
+            <div><dt>Search value</dt><dd id="decision-value">—</dd></div>
+            <div><dt>Terminal</dt><dd id="terminal">No</dd></div>
+          </dl>
+          <div class="output-block">
+            <p class="metric-label">Model reasoning</p>
+            <pre id="agent-reasoning">No reasoning trace was recorded for this frame.</pre>
+          </div>
+          <div class="output-block">
+            <p class="metric-label">Final model response</p>
+            <pre id="agent-output">No model output was recorded for this frame.</pre>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading compact">
+            <div>
+              <p class="eyebrow">Run manifest</p>
+              <h2 id="episode-id">—</h2>
+            </div>
+          </div>
+          <dl class="manifest-list">
+            <div><dt>Environment</dt><dd id="manifest-environment">—</dd></div>
+            <div><dt>Seed</dt><dd id="seed">—</dd></div>
+            <div><dt>Source revision</dt><dd id="revision">—</dd></div>
+            <div><dt>Termination</dt><dd id="termination">—</dd></div>
+            <div><dt>Actions</dt><dd id="actions">—</dd></div>
+          </dl>
+        </section>
+
+        <section class="panel log-panel">
+          <div class="panel-heading compact">
+            <div>
+              <p class="eyebrow">Episode log</p>
+              <h2>Inspectable turns</h2>
+            </div>
+          </div>
+          <ol id="turn-log" class="turn-log"></ol>
+        </section>
+      </aside>
+    </main>
+
+    <footer>
+      <p>Replay state is reconstructed from the imported JSONL artifact. The viewer contains no game logic.</p>
+      <p id="error" role="alert"></p>
+    </footer>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>
