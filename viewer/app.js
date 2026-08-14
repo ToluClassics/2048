@@ -1,6 +1,6 @@
 const elements = Object.fromEntries(
   [
-    "actions", "action-title", "agent-label", "agent-output", "board", "copy-link", "decision-value",
+    "actions", "action-title", "agent-label", "agent-output", "agent-reasoning", "board", "catalog-episode", "copy-link", "decision-value",
     "download", "end", "environment-label", "episode-id", "error", "manifest-environment", "max-tile",
     "next", "play", "previous", "replay-file", "revision", "score", "score-delta", "seed", "spawn",
     "speed", "start", "terminal", "termination", "timeline", "timeline-event", "turn", "turn-log",
@@ -8,7 +8,7 @@ const elements = Object.fromEntries(
   ].map((id) => [id, document.getElementById(id)])
 );
 
-const state = { manifest: null, turns: [], summary: null, index: 0, sourceText: "", timer: null };
+const state = { manifest: null, turns: [], summary: null, index: 0, sourceText: "", timer: null, episodePath: null };
 
 function parseJsonl(text) {
   const records = text.split(/\r?\n/).filter(Boolean).map((line, index) => {
@@ -27,10 +27,10 @@ function parseJsonl(text) {
   return { manifest: records[0], turns, summary };
 }
 
-function loadReplay(text, requestedTurn = null) {
+function loadReplay(text, requestedTurn = null, episodePath = null) {
   stopPlayback();
   const parsed = parseJsonl(text);
-  Object.assign(state, parsed, { sourceText: text });
+  Object.assign(state, parsed, { sourceText: text, episodePath });
   const queryTurn = requestedTurn ?? Number(new URLSearchParams(location.search).get("turn"));
   state.index = Number.isInteger(queryTurn) ? Math.min(Math.max(queryTurn, 0), state.turns.length) : 0;
   elements.timeline.max = state.turns.length;
@@ -72,6 +72,7 @@ function renderFrame() {
     elements["decision-value"].textContent = "—";
     elements.terminal.textContent = "No";
     elements["agent-output"].textContent = "No model output was recorded for this frame.";
+    elements["agent-reasoning"].textContent = "No reasoning trace was recorded for this frame.";
     elements["timeline-event"].textContent = "Initial board";
   } else {
     elements["action-title"].textContent = `Move ${turn.requested_action}`;
@@ -82,12 +83,15 @@ function renderFrame() {
     elements["decision-value"].textContent = turn.agent_event.decision_value ?? "—";
     elements.terminal.textContent = turn.terminal ? "Yes" : "No";
     elements["agent-output"].textContent = turn.agent_event.visible_output || "No model output was recorded for this frame.";
+    elements["agent-reasoning"].textContent = turn.agent_event.visible_reasoning || "No reasoning trace was recorded for this frame.";
     elements["timeline-event"].textContent = `${turn.requested_action} · ${turn.action_valid ? "valid" : "invalid"}`;
   }
   [...elements["turn-log"].querySelectorAll("button")].forEach((button, index) => {
     button.classList.toggle("active", index + 1 === state.index);
   });
-  history.replaceState(null, "", `${location.pathname}?turn=${state.index}`);
+  const query = new URLSearchParams({ turn: state.index });
+  if (state.episodePath) query.set("episode", state.episodePath);
+  history.replaceState(null, "", `${location.pathname}?${query}`);
 }
 
 function makeTile(value) {
@@ -151,6 +155,14 @@ elements["replay-file"].addEventListener("change", async (event) => {
   try { loadReplay(await file.text(), 0); }
   catch (error) { elements.error.textContent = error.message; }
 });
+elements["catalog-episode"].addEventListener("change", async (event) => {
+  if (!event.target.value) return;
+  try {
+    const response = await fetch(event.target.value);
+    if (!response.ok) throw new Error("Published replay was not found.");
+    loadReplay(await response.text(), 0, event.target.value);
+  } catch (error) { elements.error.textContent = error.message; }
+});
 elements.download.addEventListener("click", () => {
   const url = URL.createObjectURL(new Blob([state.sourceText], { type: "application/x-ndjson" }));
   const link = Object.assign(document.createElement("a"), { href: url, download: `${state.manifest.episode_id}.jsonl` });
@@ -171,7 +183,28 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "End") setFrame(state.turns.length);
 });
 
-fetch("sample_episode.jsonl")
-  .then((response) => { if (!response.ok) throw new Error("Sample replay was not found."); return response.text(); })
-  .then((text) => loadReplay(text))
-  .catch((error) => { elements.error.textContent = `${error.message} Open a JSONL replay to continue.`; });
+async function initialize() {
+  try {
+    const catalogResponse = await fetch("catalog.json");
+    if (catalogResponse.ok) {
+      const catalog = await catalogResponse.json();
+      const options = catalog.entries.flatMap((entry) => entry.episodes.map((episode) => {
+        const option = document.createElement("option");
+        option.value = episode.replay;
+        option.textContent = `${entry.model || entry.agent} · seed ${episode.seed} · ${episode.score}`;
+        return option;
+      }));
+      elements["catalog-episode"].append(...options);
+    }
+    const requestedEpisode = new URLSearchParams(location.search).get("episode");
+    const episodePath = requestedEpisode || "sample_episode.jsonl";
+    const response = await fetch(episodePath);
+    if (!response.ok) throw new Error("Replay was not found.");
+    loadReplay(await response.text(), null, requestedEpisode);
+    if (requestedEpisode) elements["catalog-episode"].value = requestedEpisode;
+  } catch (error) {
+    elements.error.textContent = `${error.message} Open a JSONL replay to continue.`;
+  }
+}
+
+initialize();

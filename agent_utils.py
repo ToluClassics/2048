@@ -5,7 +5,7 @@ from base_agent import Board
 from engine import POSSIBLE_MOVES
 
 ACTION_TAG_PATTERN = re.compile(r"<action>\s*(LEFT|RIGHT|UP|DOWN|NONE)\s*</action>", re.IGNORECASE)
-MAX_RESPONSE_PARSE_ATTEMPTS = 5
+MAX_RESPONSE_PARSE_ATTEMPTS = 1
 
 DEFAULT_SYSTEM_PROMPT = """
 You are the decision-making agent for the game 2048.
@@ -25,7 +25,8 @@ How the game works:
 - After merges, tiles compress again toward the move direction.
 - Example: moving LEFT on [2, 0, 2, 4] produces [4, 4, 0, 0].
 - Example: moving LEFT on [2, 2, 2, 2] produces [4, 4, 0, 0], not [8, 0, 0, 0].
-- In this implementation, every valid move adds one new tile with value 2 in a random empty cell.
+- The game starts with two random tiles.
+- Every valid move adds one new tile in a random empty cell: value 2 with probability 0.9, or value 4 with probability 0.1.
 - A move is invalid if it does not change the board state.
 - The game ends when no valid moves remain.
 

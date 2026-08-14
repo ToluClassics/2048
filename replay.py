@@ -11,17 +11,19 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from base_agent import BaseAgent, Board
-from engine import Game2048, MOVE_FUNCTIONS, POSSIBLE_MOVES, check_boards_equal, is_game_over, place_tile
+from engine import (
+    DEFAULT_ENVIRONMENT_ID,
+    ENVIRONMENT_CONTRACTS,
+    Game2048,
+    MOVE_FUNCTIONS,
+    POSSIBLE_MOVES,
+    check_boards_equal,
+    is_game_over,
+    place_tile,
+)
 
 SCHEMA_VERSION = "2048.replay.v1"
-ENVIRONMENT_CONTRACT = {
-    "id": "2048-lite-v0.1",
-    "board_size": 4,
-    "initial_tiles": 1,
-    "spawn_distribution": {"2": 1.0},
-    "invalid_action_policy": "consume_turn_without_state_change",
-    "score_definition": "sum_of_merged_tile_values",
-}
+ENVIRONMENT_CONTRACT = ENVIRONMENT_CONTRACTS[DEFAULT_ENVIRONMENT_ID]
 
 
 class ReplayValidationError(ValueError):
@@ -35,7 +37,18 @@ def canonical_json(value: dict[str, Any]) -> str:
 def describe_agent(agent: BaseAgent) -> dict[str, Any]:
     """Return a secret-free description of the configuration that affects play."""
     configuration = {}
-    for name in ("model", "temperature", "history_size", "max_depth"):
+    for name in (
+        "model",
+        "temperature",
+        "history_size",
+        "max_depth",
+        "max_tokens",
+        "max_output_tokens",
+        "max_response_attempts",
+        "reasoning_effort",
+        "provider",
+        "allow_provider_fallbacks",
+    ):
         value = getattr(agent, name, None)
         if value is not None:
             configuration[name] = value
@@ -49,7 +62,11 @@ def describe_agent(agent: BaseAgent) -> dict[str, Any]:
     }
 
 
-def detect_spawn(board_after_move: Board, board_after_spawn: Board) -> dict[str, int] | None:
+def detect_spawn(
+    board_after_move: Board,
+    board_after_spawn: Board,
+    spawn_distribution: dict[str, float],
+) -> dict[str, int] | None:
     differences = []
     for row in range(4):
         for col in range(4):
@@ -62,8 +79,8 @@ def detect_spawn(board_after_move: Board, board_after_spawn: Board) -> dict[str,
     if len(differences) != 1:
         raise ReplayValidationError("a valid move must create exactly one spawn difference")
     row, col, before, after = differences[0]
-    if before != 0 or after != 2:
-        raise ReplayValidationError("the current environment may only spawn a 2 into an empty cell")
+    if before != 0 or str(after) not in spawn_distribution:
+        raise ReplayValidationError("spawn violates the declared environment distribution")
     return {"row": row, "col": col, "value": after}
 
 
@@ -74,6 +91,9 @@ class EpisodeRecorder:
     max_turns: int
     agent: BaseAgent
     initial_board: Board
+    environment_contract: dict[str, Any] = field(
+        default_factory=lambda: dict(ENVIRONMENT_CONTRACT)
+    )
     source_revision: str = "unknown"
     records: list[dict[str, Any]] = field(default_factory=list)
     valid_actions: int = 0
@@ -82,7 +102,7 @@ class EpisodeRecorder:
     def __post_init__(self) -> None:
         identity = {
             "schema_version": SCHEMA_VERSION,
-            "environment": ENVIRONMENT_CONTRACT,
+            "environment": self.environment_contract,
             "seed": self.seed,
             "max_turns": self.max_turns,
             "agent": describe_agent(self.agent),
@@ -95,7 +115,7 @@ class EpisodeRecorder:
                 "record_type": "manifest",
                 "schema_version": SCHEMA_VERSION,
                 "episode_id": episode_id,
-                "environment": ENVIRONMENT_CONTRACT,
+                "environment": self.environment_contract,
                 "seed": self.seed,
                 "max_turns": self.max_turns,
                 "agent": describe_agent(self.agent),
@@ -129,6 +149,12 @@ class EpisodeRecorder:
         visible_output = getattr(self.agent, "last_response", "")
         if isinstance(visible_output, str) and visible_output.strip():
             agent_event["visible_output"] = visible_output.strip()
+        visible_reasoning = getattr(self.agent, "last_reasoning", "")
+        if isinstance(visible_reasoning, str) and visible_reasoning.strip():
+            agent_event["visible_reasoning"] = visible_reasoning.strip()
+        response_metadata = getattr(self.agent, "last_response_metadata", None)
+        if isinstance(response_metadata, dict) and response_metadata:
+            agent_event["response_metadata"] = response_metadata
         if isinstance(decision_value, (int, float)) and math.isfinite(decision_value):
             agent_event["decision_value"] = decision_value
         self.records.append(
@@ -139,7 +165,15 @@ class EpisodeRecorder:
                 "requested_action": requested_action,
                 "action_valid": action_valid,
                 "board_after_move": board_after_move,
-                "spawn": detect_spawn(board_after_move, board_after) if action_valid else None,
+                "spawn": (
+                    detect_spawn(
+                        board_after_move,
+                        board_after,
+                        self.environment_contract["spawn_distribution"],
+                    )
+                    if action_valid
+                    else None
+                ),
                 "board_after": board_after,
                 "score_delta": score_delta,
                 "score": score,
@@ -188,7 +222,12 @@ def validate_replay(records: Iterable[dict[str, Any]]) -> dict[str, Any]:
     manifest = items[0]
     if manifest.get("schema_version") != SCHEMA_VERSION:
         raise ReplayValidationError("unsupported replay schema")
-    if manifest.get("environment") != ENVIRONMENT_CONTRACT:
+    declared_environment = manifest.get("environment")
+    environment_id = (
+        declared_environment.get("id") if isinstance(declared_environment, dict) else None
+    )
+    environment_contract = ENVIRONMENT_CONTRACTS.get(environment_id)
+    if declared_environment != environment_contract:
         raise ReplayValidationError("unsupported environment contract")
 
     seed = manifest.get("seed")
@@ -198,9 +237,13 @@ def validate_replay(records: Iterable[dict[str, Any]]) -> dict[str, Any]:
     current_board = manifest.get("initial_board")
     _validate_board(current_board, "initial_board")
     initial_tiles = [value for row in current_board for value in row if value]
-    if initial_tiles != [2]:
-        raise ReplayValidationError("initial_board violates the one-2-tile environment contract")
-    seeded_game = Game2048(random_seed=seed)
+    allowed_tiles = {int(value) for value in environment_contract["spawn_distribution"]}
+    if (
+        len(initial_tiles) != environment_contract["initial_tiles"]
+        or any(value not in allowed_tiles for value in initial_tiles)
+    ):
+        raise ReplayValidationError("initial_board violates the declared environment contract")
+    seeded_game = Game2048(random_seed=seed, environment_id=environment_id)
     if seeded_game.board != current_board:
         raise ReplayValidationError("initial_board does not match the declared seed")
     current_score = 0
@@ -244,7 +287,7 @@ def validate_replay(records: Iterable[dict[str, Any]]) -> dict[str, Any]:
         if action_valid:
             if not isinstance(spawn, dict) or set(spawn) != {"row", "col", "value"}:
                 raise ReplayValidationError(f"turn {turn_count} is missing its exact spawn")
-            if spawn["value"] != 2:
+            if str(spawn["value"]) not in environment_contract["spawn_distribution"]:
                 raise ReplayValidationError(f"turn {turn_count} violates the spawn contract")
             try:
                 if expected_after_move[spawn["row"]][spawn["col"]] != 0:

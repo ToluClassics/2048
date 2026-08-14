@@ -11,6 +11,9 @@
     <header class="site-header">
       <a class="brand" href="../README.md" aria-label="2048 project">2048<span>/replay</span></a>
       <div class="header-actions">
+        <select id="catalog-episode" aria-label="Published model episode">
+          <option value="">Published episodes</option>
+        </select>
         <label class="file-button" for="replay-file">Open JSONL</label>
         <input id="replay-file" type="file" accept=".jsonl,application/json" />
         <button id="download" class="quiet-button" type="button">Download JSONL</button>
@@ -79,7 +82,11 @@
             <div><dt>Terminal</dt><dd id="terminal">No</dd></div>
           </dl>
           <div class="output-block">
-            <p class="metric-label">Visible agent output</p>
+            <p class="metric-label">Model reasoning</p>
+            <pre id="agent-reasoning">No reasoning trace was recorded for this frame.</pre>
+          </div>
+          <div class="output-block">
+            <p class="metric-label">Final model response</p>
             <pre id="agent-output">No model output was recorded for this frame.</pre>
           </div>
         </section>
