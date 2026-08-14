@@ -312,6 +312,7 @@ def main() -> int:
             model=args.model,
             api_base_url=args.api_base_url,
             max_output_tokens=args.max_output_tokens,
+            inference_seed=args.seed,
             reasoning_effort=args.reasoning_effort,
             provider=args.provider,
             allow_provider_fallbacks=args.allow_provider_fallbacks,

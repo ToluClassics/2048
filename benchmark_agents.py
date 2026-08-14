@@ -51,10 +51,11 @@ def _make_agent_factory(
     if agent_name == "vllm":
         from vllm_agent import VLLMAgent
 
-        return lambda _seed: VLLMAgent(
+        return lambda seed: VLLMAgent(
             model=model,
             api_base_url=api_base_url,
             max_output_tokens=max_output_tokens,
+            inference_seed=seed,
             reasoning_effort=reasoning_effort,
             provider=provider,
             allow_provider_fallbacks=allow_provider_fallbacks,

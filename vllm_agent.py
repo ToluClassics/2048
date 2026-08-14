@@ -41,6 +41,7 @@ class VLLMAgent(BaseAgent):
         api_base_url: Optional[str] = None,
         temperature: float = 0.5,
         max_output_tokens: int = 1024,
+        inference_seed: Optional[int] = None,
         reasoning_effort: str = "low",
         provider: Optional[str] = None,
         allow_provider_fallbacks: bool = False,
@@ -69,6 +70,7 @@ class VLLMAgent(BaseAgent):
             self.api_base_url = self.api_base_url[: -len("/completions")]
         self.temperature = temperature
         self.max_output_tokens = max_output_tokens
+        self.inference_seed = inference_seed
         self.max_response_attempts = MAX_RESPONSE_PARSE_ATTEMPTS
         self.reasoning_effort = reasoning_effort
         self.provider = provider
@@ -120,15 +122,20 @@ class VLLMAgent(BaseAgent):
                 "order": [self.provider],
                 "allow_fallbacks": self.allow_provider_fallbacks,
             }
-        completion = client.chat.completions.create(
-            model=self.model,
-            temperature=self.temperature,
-            max_tokens=self.max_output_tokens,
-            messages=[
+        request_options: dict[str, object] = {
+            "model": self.model,
+            "temperature": self.temperature,
+            "max_tokens": self.max_output_tokens,
+            "messages": [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
-            extra_body=extra_body,
+            "extra_body": extra_body,
+        }
+        if self.inference_seed is not None:
+            request_options["seed"] = self.inference_seed
+        completion = client.chat.completions.create(
+            **request_options,
         )
 
         try:
