@@ -7,7 +7,14 @@ from pathlib import Path
 from typing import Callable
 
 from base_agent import BaseAgent
-from engine import Game2048, MOVE_FUNCTIONS, POSSIBLE_MOVES, print_board
+from engine import (
+    DEFAULT_ENVIRONMENT_ID,
+    ENVIRONMENT_CONTRACTS,
+    Game2048,
+    MOVE_FUNCTIONS,
+    POSSIBLE_MOVES,
+    print_board,
+)
 from random_agent import RandomAgent
 from replay import EpisodeRecorder
 
@@ -52,12 +59,13 @@ def play_game(
     verbose: bool = True,
     replay_path: Path | None = None,
     source_revision: str | None = None,
+    environment_id: str = DEFAULT_ENVIRONMENT_ID,
 ) -> Game2048:
     reset_agent = getattr(agent, "reset", None)
     if callable(reset_agent):
         reset_agent()
 
-    game = Game2048(random_seed=random_seed)
+    game = Game2048(random_seed=random_seed, environment_id=environment_id)
     recorder = None
     if replay_path is not None:
         recorder = EpisodeRecorder(
@@ -66,6 +74,7 @@ def play_game(
             max_turns=max_turns,
             agent=agent,
             initial_board=copy.deepcopy(game.board),
+            environment_contract=copy.deepcopy(game.environment_contract),
             source_revision=source_revision or current_git_revision(),
         )
     if verbose:
@@ -82,9 +91,7 @@ def play_game(
         move, decision_value = agent.get_move(copy.deepcopy(game.board))
         if move == "NONE":
             if verbose:
-                if hasattr(agent, "last_response") and agent.last_response.strip():
-                    print("LLM response:")
-                    print(agent.last_response.strip())
+                print_agent_trace(agent)
                     
                 print("Move: NONE")
                 print("Result: board unchanged")
@@ -147,9 +154,7 @@ def play_game(
                 decision_value=decision_value,
             )
         if verbose:
-            if hasattr(agent, "last_response") and agent.last_response.strip():
-                print("LLM response:")
-                print(agent.last_response.strip())
+            print_agent_trace(agent)
             print(f"Move: {move}")
             if not moved:
                 print("Result: move did not change the board")
@@ -179,6 +184,17 @@ def play_game(
     return game
 
 
+def print_agent_trace(agent: BaseAgent) -> None:
+    reasoning = getattr(agent, "last_reasoning", "")
+    if isinstance(reasoning, str) and reasoning.strip():
+        print("Model reasoning:")
+        print(reasoning.strip())
+    response = getattr(agent, "last_response", "")
+    if isinstance(response, str) and response.strip():
+        print("Model response:")
+        print(response.strip())
+
+
 def current_git_revision() -> str:
     try:
         result = subprocess.run(
@@ -189,7 +205,14 @@ def current_git_revision() -> str:
         )
     except (FileNotFoundError, subprocess.CalledProcessError):
         return "unknown"
-    return result.stdout.strip()
+    revision = result.stdout.strip()
+    status = subprocess.run(
+        ["git", "status", "--porcelain"],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    return f"{revision}-dirty" if status.stdout.strip() else revision
 
 
 def parse_args() -> argparse.Namespace:
@@ -231,6 +254,34 @@ def parse_args() -> argparse.Namespace:
         help="API base URL for the LLM agent.",
     )
     parser.add_argument(
+        "--environment",
+        choices=sorted(ENVIRONMENT_CONTRACTS),
+        default=DEFAULT_ENVIRONMENT_ID,
+        help="Versioned game environment to run.",
+    )
+    parser.add_argument(
+        "--max-output-tokens",
+        type=int,
+        default=1024,
+        help="Maximum generated tokens per model decision.",
+    )
+    parser.add_argument(
+        "--reasoning-effort",
+        choices=("none", "low", "medium", "high"),
+        default="low",
+        help="Requested reasoning effort for compatible model endpoints.",
+    )
+    parser.add_argument(
+        "--provider",
+        default=None,
+        help="Optional OpenRouter provider slug to pin.",
+    )
+    parser.add_argument(
+        "--allow-provider-fallbacks",
+        action="store_true",
+        help="Allow OpenRouter to fall back from the pinned provider.",
+    )
+    parser.add_argument(
         "--record",
         type=Path,
         default=None,
@@ -251,6 +302,8 @@ def main() -> int:
         agent = OpenAIAgent(
             model=args.model,
             api_base_url=args.api_base_url,
+            max_output_tokens=args.max_output_tokens,
+            reasoning_effort=args.reasoning_effort,
         )
     elif args.agent == "vllm":
         from vllm_agent import VLLMAgent
@@ -258,6 +311,10 @@ def main() -> int:
         agent = VLLMAgent(
             model=args.model,
             api_base_url=args.api_base_url,
+            max_output_tokens=args.max_output_tokens,
+            reasoning_effort=args.reasoning_effort,
+            provider=args.provider,
+            allow_provider_fallbacks=args.allow_provider_fallbacks,
         )
     else:
         agent = AGENT_FACTORIES[args.agent](args.seed)
@@ -268,6 +325,7 @@ def main() -> int:
         random_seed=args.seed,
         sleep_seconds=args.sleep,
         replay_path=args.record,
+        environment_id=args.environment,
     )
     return 0
 
