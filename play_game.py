@@ -195,7 +195,7 @@ def print_agent_trace(agent: BaseAgent) -> None:
         print(response.strip())
 
 
-def current_git_revision() -> str:
+def current_git_revision(ignore_paths: list[Path] | None = None) -> str:
     try:
         result = subprocess.run(
             ["git", "rev-parse", "HEAD"],
@@ -206,8 +206,27 @@ def current_git_revision() -> str:
     except (FileNotFoundError, subprocess.CalledProcessError):
         return "unknown"
     revision = result.stdout.strip()
+    status_command = ["git", "status", "--porcelain", "--untracked-files=all"]
+    if ignore_paths:
+        root_result = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        if root_result.returncode == 0:
+            root = Path(root_result.stdout.strip()).resolve()
+            exclusions = []
+            for path in ignore_paths:
+                try:
+                    relative_path = path.resolve().relative_to(root)
+                except ValueError:
+                    continue
+                exclusions.append(f":(exclude){relative_path.as_posix()}")
+            if exclusions:
+                status_command.extend(["--", ".", *exclusions])
     status = subprocess.run(
-        ["git", "status", "--porcelain"],
+        status_command,
         check=False,
         capture_output=True,
         text=True,

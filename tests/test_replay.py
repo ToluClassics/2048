@@ -9,13 +9,36 @@ from unittest.mock import patch
 import play_game as play_game_module
 from engine import Game2048
 from expectimax_agent import ExpectimaxAgent, evaluate
-from play_game import play_game
+from play_game import current_git_revision, play_game
 from random_agent import RandomAgent
 from replay import ReplayValidationError, describe_agent, load_records, validate_replay
 from vllm_agent import VLLMAgent
 
 
 class ReplayCapabilityTests(unittest.TestCase):
+    def test_source_revision_can_ignore_only_the_declared_output_directory(self):
+        completed = [
+            SimpleNamespace(stdout="abc123\n", returncode=0),
+            SimpleNamespace(stdout="/repo\n", returncode=0),
+            SimpleNamespace(stdout="", returncode=0),
+        ]
+        with patch("play_game.subprocess.run", side_effect=completed) as run:
+            revision = current_git_revision(ignore_paths=[Path("/repo/viewer/evaluations/model")])
+
+        self.assertEqual(revision, "abc123")
+        self.assertEqual(
+            run.call_args_list[-1].args[0],
+            [
+                "git",
+                "status",
+                "--porcelain",
+                "--untracked-files=all",
+                "--",
+                ".",
+                ":(exclude)viewer/evaluations/model",
+            ],
+        )
+
     def test_canonical_environment_is_seeded_and_supports_four_spawns(self):
         self.assertEqual(
             Game2048(random_seed=7).board,

@@ -8,6 +8,7 @@ from typing import Iterable
 
 from engine import DEFAULT_ENVIRONMENT_ID, ENVIRONMENT_CONTRACTS, Board
 from play_game import AGENT_FACTORIES, current_git_revision, play_game
+from replay import describe_agent, load_records, validate_replay
 
 
 def max_tile(board: Board) -> int:
@@ -78,7 +79,10 @@ def run_benchmark(
     allow_provider_fallbacks: bool = False,
     source_revision: str | None = None,
     verbose: bool = True,
+    resume: bool = False,
 ) -> dict[str, dict[str, object]]:
+    if resume and output_dir is None:
+        raise ValueError("resume requires an output directory")
     results: dict[str, dict[str, object]] = {}
     evaluation_revision = source_revision or current_git_revision()
 
@@ -105,23 +109,40 @@ def run_benchmark(
                 if output_dir is not None
                 else None
             )
-            game = play_game(
-                agent=agent,
-                max_turns=max_turns,
-                random_seed=seed,
-                sleep_seconds=0.0,
-                verbose=verbose,
-                replay_path=replay_path,
-                source_revision=evaluation_revision,
-                environment_id=environment_id,
-            )
-            scores.append(game.score)
-            max_tiles.append(max_tile(game.board))
+            if resume and replay_path is not None and replay_path.is_file():
+                validated, episode_revision = _load_resumable_episode(
+                    replay_path,
+                    agent=agent,
+                    seed=seed,
+                    max_turns=max_turns,
+                    environment_id=environment_id,
+                )
+                score = validated["score"]
+                episode_max_tile = validated["max_tile"]
+                if verbose:
+                    print(f"Reusing validated replay: {replay_path}")
+            else:
+                game = play_game(
+                    agent=agent,
+                    max_turns=max_turns,
+                    random_seed=seed,
+                    sleep_seconds=0.0,
+                    verbose=verbose,
+                    replay_path=replay_path,
+                    source_revision=evaluation_revision,
+                    environment_id=environment_id,
+                )
+                score = game.score
+                episode_max_tile = max_tile(game.board)
+                episode_revision = evaluation_revision
+            scores.append(score)
+            max_tiles.append(episode_max_tile)
             episodes.append(
                 {
                     "seed": seed,
-                    "score": game.score,
-                    "max_tile": max_tile(game.board),
+                    "score": score,
+                    "max_tile": episode_max_tile,
+                    "source_revision": episode_revision,
                     "replay": (
                         replay_path.relative_to(output_dir).as_posix()
                         if replay_path is not None and output_dir is not None
@@ -141,6 +162,34 @@ def run_benchmark(
     return results
 
 
+def _load_resumable_episode(
+    replay_path: Path,
+    *,
+    agent: object,
+    seed: int,
+    max_turns: int,
+    environment_id: str,
+) -> tuple[dict[str, object], str]:
+    try:
+        records = load_records(replay_path)
+        validated = validate_replay(records)
+        manifest = records[0]
+        if manifest.get("seed") != seed:
+            raise ValueError("seed does not match")
+        if manifest.get("max_turns") != max_turns:
+            raise ValueError("turn limit does not match")
+        if manifest.get("environment") != ENVIRONMENT_CONTRACTS[environment_id]:
+            raise ValueError("environment contract does not match")
+        if manifest.get("agent") != describe_agent(agent):
+            raise ValueError("agent configuration does not match")
+        revision = manifest.get("source", {}).get("revision")
+        if not isinstance(revision, str) or not revision:
+            raise ValueError("source revision is missing")
+    except (OSError, ValueError) as exc:
+        raise ValueError(f"cannot resume from {replay_path}: {exc}") from exc
+    return validated, revision
+
+
 def safe_slug(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
 
@@ -158,6 +207,7 @@ def build_generation_command(
     reasoning_effort: str,
     provider: str | None,
     allow_provider_fallbacks: bool,
+    resume: bool = False,
 ) -> str:
     command = [
         "python3",
@@ -183,6 +233,8 @@ def build_generation_command(
         command.extend(["--provider", provider])
     if allow_provider_fallbacks:
         command.append("--allow-provider-fallbacks")
+    if resume:
+        command.append("--resume")
     command.extend(["--output-dir", output_dir.as_posix()])
     return shlex.join(command)
 
@@ -202,6 +254,7 @@ def write_evaluation_artifacts(
     source_revision: str,
     results: dict[str, dict[str, object]],
     api_base_url: str | None = None,
+    resume: bool = False,
 ) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     manifest = {
@@ -219,6 +272,13 @@ def write_evaluation_artifacts(
             "allow_provider_fallbacks": allow_provider_fallbacks,
         },
         "source_revision": source_revision,
+        "source_revisions": sorted(
+            {
+                episode["source_revision"]
+                for result in results.values()
+                for episode in result["episodes"]
+            }
+        ),
         "primary_metric": "median_score",
         "generation_command": build_generation_command(
             output_dir,
@@ -232,6 +292,7 @@ def write_evaluation_artifacts(
             reasoning_effort=reasoning_effort,
             provider=provider,
             allow_provider_fallbacks=allow_provider_fallbacks,
+            resume=resume,
         ),
         "results": results,
     }
@@ -333,13 +394,18 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--provider", default=None)
     parser.add_argument("--allow-provider-fallbacks", action="store_true")
+    parser.add_argument(
+        "--resume",
+        action="store_true",
+        help="Reuse matching, validated episode replays and run only missing seeds.",
+    )
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
     seeds = range(args.start_seed, args.start_seed + args.num_games)
-    source_revision = current_git_revision()
+    source_revision = current_git_revision(ignore_paths=[args.output_dir])
     results = run_benchmark(
         args.agents,
         seeds,
@@ -353,6 +419,7 @@ def main() -> int:
         provider=args.provider,
         allow_provider_fallbacks=args.allow_provider_fallbacks,
         source_revision=source_revision,
+        resume=args.resume,
     )
     write_evaluation_artifacts(
         args.output_dir,
@@ -368,6 +435,7 @@ def main() -> int:
         source_revision=source_revision,
         results=results,
         api_base_url=args.api_base_url,
+        resume=args.resume,
     )
 
     print(f"Benchmark seeds: {args.start_seed}..{args.start_seed + args.num_games - 1}")

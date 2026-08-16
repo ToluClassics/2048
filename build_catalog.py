@@ -43,11 +43,16 @@ def build_catalog(
         elif summary["environment"] != environment or summary["max_turns"] != max_turns:
             raise CatalogError("all leaderboard entries must share an environment and turn limit")
 
+        declared_revisions = summary.get("source_revisions", [summary["source_revision"]])
+        if require_bound_source and any(_is_unbound(revision) for revision in declared_revisions):
+            raise CatalogError(f"summary contains an unbound episode revision: {summary_path}")
+        all_episode_source_revisions = set()
         for agent_name, result in summary["results"].items():
             episodes = []
             failed_turns = 0
             total_turns = 0
             agent_configuration = None
+            episode_source_revisions = set()
             for episode in result["episodes"]:
                 replay_path = (summary_path.parent / episode["replay"]).resolve()
                 if not replay_path.is_relative_to(summary_path.parent.resolve()):
@@ -56,6 +61,8 @@ def build_catalog(
                 validated = validate_replay(records)
                 manifest = records[0]
                 agent_configuration = manifest["agent"].get("configuration", {})
+                episode_source_revisions.add(manifest["source"]["revision"])
+                all_episode_source_revisions.add(manifest["source"]["revision"])
                 if require_bound_source and _is_unbound(manifest["source"]["revision"]):
                     raise CatalogError(f"replay is not bound to a clean source revision: {replay_path}")
                 if validated["score"] != episode["score"] or validated["max_tile"] != episode["max_tile"]:
@@ -86,6 +93,7 @@ def build_catalog(
                     "generation_command": summary.get("generation_command")
                     or _legacy_generation_command(summary, summary_path, agent_configuration or {}),
                     "source_revision": summary["source_revision"],
+                    "source_revisions": sorted(episode_source_revisions),
                     "score_summary": result["score_summary"],
                     "tile_summary": result["tile_summary"],
                     "failure_summary": {
@@ -96,6 +104,8 @@ def build_catalog(
                     "episodes": episodes,
                 }
             )
+        if set(declared_revisions) != all_episode_source_revisions:
+            raise CatalogError(f"episode source revision set mismatch: {summary_path}")
 
     entries.sort(
         key=lambda entry: (
