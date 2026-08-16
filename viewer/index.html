@@ -7,9 +7,15 @@
     <title>2048 Episode Replay</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
+  <body class="replay-page">
     <header class="site-header">
-      <a class="brand" href="../README.md" aria-label="2048 project">2048<span>/replay</span></a>
+      <div class="header-primary">
+        <a class="brand" href="index.html" aria-label="2048 replay home">2048<span>/replay</span></a>
+        <nav class="site-nav" aria-label="Viewer pages">
+          <a class="active" href="index.html" aria-current="page">Replay</a>
+          <a href="leaderboard.html">Leaderboard</a>
+        </nav>
+      </div>
       <div class="header-actions">
         <select id="catalog-episode" aria-label="Published model episode">
           <option value="">Published episodes</option>
@@ -20,7 +26,7 @@
       </div>
     </header>
 
-    <main>
+    <main class="replay-layout">
       <section class="replay-column" aria-label="Episode replay">
         <div class="eyebrow-row">
           <p class="eyebrow" id="agent-label">Loading episode…</p>
@@ -64,6 +70,11 @@
             <button id="copy-link" class="copy-link" type="button">Copy turn link</button>
           </div>
         </div>
+
+        <footer class="viewer-footer">
+          <p>Replay state is reconstructed from the imported JSONL artifact. The viewer contains no game logic.</p>
+          <p id="error" role="alert"></p>
+        </footer>
       </section>
 
       <aside class="evidence-column" aria-label="Episode evidence">
@@ -118,11 +129,6 @@
         </section>
       </aside>
     </main>
-
-    <footer>
-      <p>Replay state is reconstructed from the imported JSONL artifact. The viewer contains no game logic.</p>
-      <p id="error" role="alert"></p>
-    </footer>
 
     <script src="app.js" defer></script>
   </body>

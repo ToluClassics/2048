@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Compare reproducible 2048 agent evaluations and open every recorded episode." />
+    <title>2048 Agent Leaderboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="leaderboard-page">
+    <header class="site-header">
+      <div class="header-primary">
+        <a class="brand" href="index.html" aria-label="2048 replay home">2048<span>/replay</span></a>
+        <nav class="site-nav" aria-label="Viewer pages">
+          <a href="index.html">Replay</a>
+          <a class="active" href="leaderboard.html" aria-current="page">Leaderboard</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="leaderboard-layout">
+      <section class="leaderboard-hero" aria-labelledby="leaderboard-title">
+        <p class="eyebrow">Canonical evaluation</p>
+        <h1 id="leaderboard-title">2048 agent leaderboard</h1>
+        <p class="leaderboard-intro">
+          Every row uses the same environment, seed set, and turn limit. Rankings use median score;
+          each result links back to its inspectable episode evidence.
+        </p>
+        <dl class="evaluation-contract" aria-label="Evaluation contract">
+          <div><dt>Environment</dt><dd id="leaderboard-environment">—</dd></div>
+          <div><dt>Episodes</dt><dd id="leaderboard-episodes">—</dd></div>
+          <div><dt>Turn limit</dt><dd id="leaderboard-turns">—</dd></div>
+          <div><dt>Primary metric</dt><dd id="leaderboard-metric">—</dd></div>
+        </dl>
+      </section>
+
+      <section class="leaderboard-panel" aria-labelledby="rankings-title">
+        <div class="leaderboard-heading">
+          <div>
+            <p class="eyebrow">Verified artifacts</p>
+            <h2 id="rankings-title">Rankings</h2>
+          </div>
+          <p id="leaderboard-count" class="leaderboard-count"></p>
+        </div>
+        <div class="table-scroll" tabindex="0" aria-label="Scrollable leaderboard table">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Rank</th>
+                <th scope="col">Agent / model</th>
+                <th scope="col">Median score</th>
+                <th scope="col">Mean score</th>
+                <th scope="col">Best score</th>
+                <th scope="col">Median tile</th>
+                <th scope="col">Episode evidence</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-rows"></tbody>
+          </table>
+        </div>
+        <p id="leaderboard-error" class="leaderboard-error" role="alert"></p>
+      </section>
+    </main>
+
+    <script src="leaderboard.js" defer></script>
+  </body>
+</html>

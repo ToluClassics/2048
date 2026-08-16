@@ -207,6 +207,8 @@ class ReplayCapabilityTests(unittest.TestCase):
         root_html = (root / "index.html").read_text(encoding="utf-8")
         html = (root / "viewer" / "index.html").read_text(encoding="utf-8")
         script = (root / "viewer" / "app.js").read_text(encoding="utf-8")
+        leaderboard_html = (root / "viewer" / "leaderboard.html").read_text(encoding="utf-8")
+        leaderboard_script = (root / "viewer" / "leaderboard.js").read_text(encoding="utf-8")
         summary = validate_replay(load_records(root / "viewer" / "sample_episode.jsonl"))
 
         self.assertIn('url=viewer/', root_html)
@@ -216,6 +218,9 @@ class ReplayCapabilityTests(unittest.TestCase):
         self.assertIn('id="agent-reasoning"', html)
         self.assertIn('fetch("catalog.json")', script)
         self.assertIn('requestedEpisode || "sample_episode.jsonl"', script)
+        self.assertIn('href="leaderboard.html"', html)
+        self.assertIn('id="leaderboard-rows"', leaderboard_html)
+        self.assertIn('fetch("catalog.json")', leaderboard_script)
         self.assertGreater(summary["turns"], 0)
 
 
