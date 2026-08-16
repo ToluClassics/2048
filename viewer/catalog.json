@@ -69,11 +69,100 @@
         "min": 3836
       },
       "source_revision": "3402039a2659a37fbe024e8d9d5f802b21cd90c4",
+      "source_revisions": [
+        "3402039a2659a37fbe024e8d9d5f802b21cd90c4"
+      ],
       "tile_summary": {
         "avg": 972.8,
         "max": 2048,
         "median": 1024,
         "min": 256
+      }
+    },
+    {
+      "agent": "vllm",
+      "episodes": [
+        {
+          "episode_id": "80044d1d21985157",
+          "failed_turns": 16,
+          "max_tile": 256,
+          "replay": "evaluations/gpt-5.4-mini/replays/openai-gpt-5-4-mini/seed-100.jsonl",
+          "score": 4448,
+          "seed": 100,
+          "source_revision": "d1a586bfbc054e6a5d7989235b87d6076a054e3d",
+          "turns": 347
+        },
+        {
+          "episode_id": "047d2473efee2d2b",
+          "failed_turns": 3,
+          "max_tile": 64,
+          "replay": "evaluations/gpt-5.4-mini/replays/openai-gpt-5-4-mini/seed-101.jsonl",
+          "score": 952,
+          "seed": 101,
+          "source_revision": "4bb102ec9e87705b8157c76ec04dec0d69711b33",
+          "turns": 115
+        },
+        {
+          "episode_id": "8eb7a03ed458c014",
+          "failed_turns": 2,
+          "max_tile": 128,
+          "replay": "evaluations/gpt-5.4-mini/replays/openai-gpt-5-4-mini/seed-102.jsonl",
+          "score": 1516,
+          "seed": 102,
+          "source_revision": "4bb102ec9e87705b8157c76ec04dec0d69711b33",
+          "turns": 159
+        },
+        {
+          "episode_id": "c93689095da170f3",
+          "failed_turns": 4,
+          "max_tile": 256,
+          "replay": "evaluations/gpt-5.4-mini/replays/openai-gpt-5-4-mini/seed-103.jsonl",
+          "score": 3372,
+          "seed": 103,
+          "source_revision": "4bb102ec9e87705b8157c76ec04dec0d69711b33",
+          "turns": 288
+        },
+        {
+          "episode_id": "e4a26ab77175803a",
+          "failed_turns": 6,
+          "max_tile": 128,
+          "replay": "evaluations/gpt-5.4-mini/replays/openai-gpt-5-4-mini/seed-104.jsonl",
+          "score": 1552,
+          "seed": 104,
+          "source_revision": "4bb102ec9e87705b8157c76ec04dec0d69711b33",
+          "turns": 167
+        }
+      ],
+      "failure_summary": {
+        "failed_turns": 31,
+        "rate": 0.028810408921933085,
+        "total_turns": 1076
+      },
+      "generation_command": "python3 benchmark_agents.py --agents vllm --num-games 5 --start-seed 100 --max-turns 1000 --environment 2048-canonical-v1 --model openai/gpt-5.4-mini --api-base-url https://openrouter.ai/api/v1 --max-output-tokens 1024 --reasoning-effort low --provider openai --resume --output-dir viewer/evaluations/gpt-5.4-mini",
+      "inference": {
+        "allow_provider_fallbacks": false,
+        "api_base_url": "https://openrouter.ai/api/v1",
+        "max_output_tokens": 1024,
+        "provider": "openai",
+        "reasoning_effort": "low"
+      },
+      "model": "openai/gpt-5.4-mini",
+      "score_summary": {
+        "avg": 2368.0,
+        "max": 4448,
+        "median": 1552,
+        "min": 952
+      },
+      "source_revision": "4bb102ec9e87705b8157c76ec04dec0d69711b33",
+      "source_revisions": [
+        "4bb102ec9e87705b8157c76ec04dec0d69711b33",
+        "d1a586bfbc054e6a5d7989235b87d6076a054e3d"
+      ],
+      "tile_summary": {
+        "avg": 166.4,
+        "max": 256,
+        "median": 128,
+        "min": 64
       }
     },
     {
@@ -145,6 +234,9 @@
         "min": 924
       },
       "source_revision": "3402039a2659a37fbe024e8d9d5f802b21cd90c4",
+      "source_revisions": [
+        "3402039a2659a37fbe024e8d9d5f802b21cd90c4"
+      ],
       "tile_summary": {
         "avg": 128.0,
         "max": 128,

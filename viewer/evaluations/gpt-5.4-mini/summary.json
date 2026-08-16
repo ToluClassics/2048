@@ -1,0 +1,99 @@
+{
+  "agents": [
+    "vllm"
+  ],
+  "environment": {
+    "board_size": 4,
+    "id": "2048-canonical-v1",
+    "initial_tiles": 2,
+    "invalid_action_policy": "consume_turn_without_state_change",
+    "score_definition": "sum_of_merged_tile_values",
+    "spawn_distribution": {
+      "2": 0.9,
+      "4": 0.1
+    },
+    "spawn_rng_order": [
+      "empty_cell_uniform",
+      "tile_value"
+    ]
+  },
+  "generation_command": "python3 benchmark_agents.py --agents vllm --num-games 5 --start-seed 100 --max-turns 1000 --environment 2048-canonical-v1 --model openai/gpt-5.4-mini --api-base-url https://openrouter.ai/api/v1 --max-output-tokens 1024 --reasoning-effort low --provider openai --resume --output-dir viewer/evaluations/gpt-5.4-mini",
+  "inference": {
+    "allow_provider_fallbacks": false,
+    "api_base_url": "https://openrouter.ai/api/v1",
+    "max_output_tokens": 1024,
+    "provider": "openai",
+    "reasoning_effort": "low"
+  },
+  "max_turns": 1000,
+  "model": "openai/gpt-5.4-mini",
+  "primary_metric": "median_score",
+  "results": {
+    "vllm": {
+      "episodes": [
+        {
+          "max_tile": 256,
+          "replay": "replays/openai-gpt-5-4-mini/seed-100.jsonl",
+          "score": 4448,
+          "seed": 100,
+          "source_revision": "d1a586bfbc054e6a5d7989235b87d6076a054e3d"
+        },
+        {
+          "max_tile": 64,
+          "replay": "replays/openai-gpt-5-4-mini/seed-101.jsonl",
+          "score": 952,
+          "seed": 101,
+          "source_revision": "4bb102ec9e87705b8157c76ec04dec0d69711b33"
+        },
+        {
+          "max_tile": 128,
+          "replay": "replays/openai-gpt-5-4-mini/seed-102.jsonl",
+          "score": 1516,
+          "seed": 102,
+          "source_revision": "4bb102ec9e87705b8157c76ec04dec0d69711b33"
+        },
+        {
+          "max_tile": 256,
+          "replay": "replays/openai-gpt-5-4-mini/seed-103.jsonl",
+          "score": 3372,
+          "seed": 103,
+          "source_revision": "4bb102ec9e87705b8157c76ec04dec0d69711b33"
+        },
+        {
+          "max_tile": 128,
+          "replay": "replays/openai-gpt-5-4-mini/seed-104.jsonl",
+          "score": 1552,
+          "seed": 104,
+          "source_revision": "4bb102ec9e87705b8157c76ec04dec0d69711b33"
+        }
+      ],
+      "games": 5,
+      "model": "openai/gpt-5.4-mini",
+      "score_summary": {
+        "avg": 2368.0,
+        "max": 4448,
+        "median": 1552,
+        "min": 952
+      },
+      "tile_summary": {
+        "avg": 166.4,
+        "max": 256,
+        "median": 128,
+        "min": 64
+      }
+    }
+  },
+  "schema_version": "2048.evaluation.v1",
+  "seeds": [
+    100,
+    101,
+    102,
+    103,
+    104
+  ],
+  "source_revision": "4bb102ec9e87705b8157c76ec04dec0d69711b33",
+  "source_revisions": [
+    "4bb102ec9e87705b8157c76ec04dec0d69711b33",
+    "d1a586bfbc054e6a5d7989235b87d6076a054e3d"
+  ]
+}
