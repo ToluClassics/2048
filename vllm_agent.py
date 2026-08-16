@@ -146,6 +146,7 @@ class VLLMAgent(BaseAgent):
         reasoning = getattr(message, "reasoning", None) or getattr(
             message, "reasoning_content", None
         )
+        reasoning_details = getattr(message, "reasoning_details", None)
         self.last_reasoning = reasoning if isinstance(reasoning, str) else ""
         usage = getattr(completion, "usage", None)
         usage_data = usage.model_dump() if hasattr(usage, "model_dump") else None
@@ -157,6 +158,12 @@ class VLLMAgent(BaseAgent):
                 "finish_reason": getattr(message, "finish_reason", None)
                 or getattr(completion.choices[0], "finish_reason", None),
                 "usage": usage_data,
+                "reasoning_detail_types": [
+                    detail.get("type") if isinstance(detail, dict) else getattr(detail, "type", None)
+                    for detail in reasoning_details
+                ]
+                if isinstance(reasoning_details, list)
+                else None,
             }.items()
             if value is not None
         }
@@ -173,9 +180,15 @@ class VLLMAgent(BaseAgent):
             if text:
                 return text
 
-        # Preserve a reasoning-only, length-limited response without pretending it
-        # was a final answer. The caller will count it as an invalid action.
-        if isinstance(reasoning, str) and reasoning:
+        refusal = getattr(message, "refusal", None)
+        if isinstance(refusal, str) and refusal:
+            return refusal
+
+        # A completed response envelope can contain only visible or encrypted
+        # reasoning, especially when the output limit is exhausted. Do not treat
+        # that as a transport failure or pretend it was a final answer: the caller
+        # records one invalid NONE action and the benchmark continues.
+        if content is None:
             return ""
 
         raise RuntimeError(f"Unsupported VLLM content format: {message}")

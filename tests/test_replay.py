@@ -90,6 +90,43 @@ class ReplayCapabilityTests(unittest.TestCase):
         self.assertEqual(agent.last_response, "")
         self.assertEqual(agent.last_response_metadata["finish_reason"], "length")
 
+    def test_encrypted_reasoning_only_response_is_one_invalid_action(self):
+        def create(**_kwargs):
+            message = SimpleNamespace(
+                content=None,
+                refusal=None,
+                reasoning=None,
+                reasoning_details=[
+                    {
+                        "type": "reasoning.encrypted",
+                        "data": "encrypted-provider-payload",
+                    }
+                ],
+            )
+            return SimpleNamespace(
+                id="openrouter-response",
+                model="openai/gpt-5.4-mini",
+                choices=[SimpleNamespace(message=message, finish_reason="length")],
+                usage=None,
+            )
+
+        agent = VLLMAgent(model="openai/gpt-5.4-mini", max_output_tokens=1024)
+        agent._client = SimpleNamespace(
+            chat=SimpleNamespace(completions=SimpleNamespace(create=create))
+        )
+
+        move, _ = agent.get_move(
+            [[2, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 2, 0, 0]]
+        )
+
+        self.assertEqual(move, "NONE")
+        self.assertEqual(agent.last_response, "")
+        self.assertEqual(agent.last_reasoning, "")
+        self.assertEqual(
+            agent.last_response_metadata["reasoning_detail_types"],
+            ["reasoning.encrypted"],
+        )
+
     def test_vllm_cli_uses_the_environment_seed_for_inference(self):
         captured = {}
 
