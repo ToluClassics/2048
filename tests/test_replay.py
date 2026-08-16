@@ -216,11 +216,11 @@ class ReplayCapabilityTests(unittest.TestCase):
         self.assertIn('id="board"', html)
         self.assertIn('id="catalog-episode"', html)
         self.assertIn('id="agent-reasoning"', html)
-        self.assertIn('fetch("catalog.json")', script)
+        self.assertIn('fetch("catalog.json", { cache: "no-store" })', script)
         self.assertIn('requestedEpisode || "sample_episode.jsonl"', script)
         self.assertIn('href="leaderboard.html"', html)
         self.assertIn('id="leaderboard-rows"', leaderboard_html)
-        self.assertIn('fetch("catalog.json")', leaderboard_script)
+        self.assertIn('fetch("catalog.json", { cache: "no-store" })', leaderboard_script)
         self.assertGreater(summary["turns"], 0)
 
 

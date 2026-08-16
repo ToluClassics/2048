@@ -1,6 +1,7 @@
 import argparse
 import json
 import re
+import shlex
 import statistics
 from pathlib import Path
 from typing import Iterable
@@ -144,6 +145,48 @@ def safe_slug(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
 
 
+def build_generation_command(
+    output_dir: Path,
+    *,
+    agent_names: list[str],
+    model: str | None,
+    seeds: list[int],
+    max_turns: int,
+    environment_id: str,
+    api_base_url: str | None,
+    max_output_tokens: int,
+    reasoning_effort: str,
+    provider: str | None,
+    allow_provider_fallbacks: bool,
+) -> str:
+    command = [
+        "python3",
+        "benchmark_agents.py",
+        "--agents",
+        *agent_names,
+        "--num-games",
+        str(len(seeds)),
+        "--start-seed",
+        str(seeds[0]),
+        "--max-turns",
+        str(max_turns),
+        "--environment",
+        environment_id,
+    ]
+    if model:
+        command.extend(["--model", model])
+    if api_base_url:
+        command.extend(["--api-base-url", api_base_url])
+    command.extend(["--max-output-tokens", str(max_output_tokens)])
+    command.extend(["--reasoning-effort", reasoning_effort])
+    if provider:
+        command.extend(["--provider", provider])
+    if allow_provider_fallbacks:
+        command.append("--allow-provider-fallbacks")
+    command.extend(["--output-dir", output_dir.as_posix()])
+    return shlex.join(command)
+
+
 def write_evaluation_artifacts(
     output_dir: Path,
     *,
@@ -158,6 +201,7 @@ def write_evaluation_artifacts(
     allow_provider_fallbacks: bool,
     source_revision: str,
     results: dict[str, dict[str, object]],
+    api_base_url: str | None = None,
 ) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     manifest = {
@@ -168,6 +212,7 @@ def write_evaluation_artifacts(
         "seeds": seeds,
         "max_turns": max_turns,
         "inference": {
+            "api_base_url": api_base_url,
             "max_output_tokens": max_output_tokens,
             "reasoning_effort": reasoning_effort,
             "provider": provider,
@@ -175,6 +220,19 @@ def write_evaluation_artifacts(
         },
         "source_revision": source_revision,
         "primary_metric": "median_score",
+        "generation_command": build_generation_command(
+            output_dir,
+            agent_names=agent_names,
+            model=model,
+            seeds=seeds,
+            max_turns=max_turns,
+            environment_id=environment_id,
+            api_base_url=api_base_url,
+            max_output_tokens=max_output_tokens,
+            reasoning_effort=reasoning_effort,
+            provider=provider,
+            allow_provider_fallbacks=allow_provider_fallbacks,
+        ),
         "results": results,
     }
     (output_dir / "summary.json").write_text(
@@ -309,6 +367,7 @@ def main() -> int:
         allow_provider_fallbacks=args.allow_provider_fallbacks,
         source_revision=source_revision,
         results=results,
+        api_base_url=args.api_base_url,
     )
 
     print(f"Benchmark seeds: {args.start_seed}..{args.start_seed + args.num_games - 1}")

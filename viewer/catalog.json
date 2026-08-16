@@ -5,40 +5,56 @@
       "episodes": [
         {
           "episode_id": "df061f2d69044de9",
+          "failed_turns": 0,
           "max_tile": 1024,
           "replay": "evaluations/baselines/replays/expectimax/seed-100.jsonl",
           "score": 17300,
-          "seed": 100
+          "seed": 100,
+          "turns": 1000
         },
         {
           "episode_id": "13fab7237c0e8cac",
+          "failed_turns": 0,
           "max_tile": 1024,
           "replay": "evaluations/baselines/replays/expectimax/seed-101.jsonl",
           "score": 11912,
-          "seed": 101
+          "seed": 101,
+          "turns": 703
         },
         {
           "episode_id": "106101146511993b",
+          "failed_turns": 0,
           "max_tile": 256,
           "replay": "evaluations/baselines/replays/expectimax/seed-102.jsonl",
           "score": 3836,
-          "seed": 102
+          "seed": 102,
+          "turns": 304
         },
         {
           "episode_id": "bb20106a303d505c",
+          "failed_turns": 0,
           "max_tile": 2048,
           "replay": "evaluations/baselines/replays/expectimax/seed-103.jsonl",
           "score": 20640,
-          "seed": 103
+          "seed": 103,
+          "turns": 1000
         },
         {
           "episode_id": "c681d13fcc202f10",
+          "failed_turns": 0,
           "max_tile": 512,
           "replay": "evaluations/baselines/replays/expectimax/seed-104.jsonl",
           "score": 5056,
-          "seed": 104
+          "seed": 104,
+          "turns": 346
         }
       ],
+      "failure_summary": {
+        "failed_turns": 0,
+        "rate": 0.0,
+        "total_turns": 3353
+      },
+      "generation_command": "python3 benchmark_agents.py --agents random expectimax --num-games 5 --start-seed 100 --max-turns 1000 --environment 2048-canonical-v1 --max-output-tokens 1024 --reasoning-effort low --output-dir viewer/evaluations/baselines",
       "inference": {
         "allow_provider_fallbacks": false,
         "max_output_tokens": 1024,
@@ -65,40 +81,56 @@
       "episodes": [
         {
           "episode_id": "3bd1a566bf526ebe",
+          "failed_turns": 27,
           "max_tile": 128,
           "replay": "evaluations/baselines/replays/random/seed-100.jsonl",
           "score": 1428,
-          "seed": 100
+          "seed": 100,
+          "turns": 174
         },
         {
           "episode_id": "5017b1027bac4564",
+          "failed_turns": 16,
           "max_tile": 128,
           "replay": "evaluations/baselines/replays/random/seed-101.jsonl",
           "score": 1400,
-          "seed": 101
+          "seed": 101,
+          "turns": 160
         },
         {
           "episode_id": "10ea8e6c23e07304",
+          "failed_turns": 20,
           "max_tile": 128,
           "replay": "evaluations/baselines/replays/random/seed-102.jsonl",
           "score": 1120,
-          "seed": 102
+          "seed": 102,
+          "turns": 138
         },
         {
           "episode_id": "a373cfcf0b1f101e",
+          "failed_turns": 18,
           "max_tile": 128,
           "replay": "evaluations/baselines/replays/random/seed-103.jsonl",
           "score": 924,
-          "seed": 103
+          "seed": 103,
+          "turns": 117
         },
         {
           "episode_id": "ad6dbe70de6f156f",
+          "failed_turns": 15,
           "max_tile": 128,
           "replay": "evaluations/baselines/replays/random/seed-104.jsonl",
           "score": 1168,
-          "seed": 104
+          "seed": 104,
+          "turns": 135
         }
       ],
+      "failure_summary": {
+        "failed_turns": 96,
+        "rate": 0.13259668508287292,
+        "total_turns": 724
+      },
+      "generation_command": "python3 benchmark_agents.py --agents random expectimax --num-games 5 --start-seed 100 --max-turns 1000 --environment 2048-canonical-v1 --max-output-tokens 1024 --reasoning-effort low --output-dir viewer/evaluations/baselines",
       "inference": {
         "allow_provider_fallbacks": false,
         "max_output_tokens": 1024,

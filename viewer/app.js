@@ -185,7 +185,7 @@ document.addEventListener("keydown", (event) => {
 
 async function initialize() {
   try {
-    const catalogResponse = await fetch("catalog.json");
+    const catalogResponse = await fetch("catalog.json", { cache: "no-store" });
     if (catalogResponse.ok) {
       const catalog = await catalogResponse.json();
       const options = catalog.entries.flatMap((entry) => entry.episodes.map((episode) => {

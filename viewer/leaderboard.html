@@ -24,7 +24,8 @@
         <h1 id="leaderboard-title">2048 agent leaderboard</h1>
         <p class="leaderboard-intro">
           Every row uses the same environment, seed set, and turn limit. Rankings use median score;
-          each result links back to its inspectable episode evidence.
+          each result links back to its inspectable episode evidence. Select an agent or model to see
+          the command that generated its evaluation.
         </p>
         <dl class="evaluation-contract" aria-label="Evaluation contract">
           <div><dt>Environment</dt><dd id="leaderboard-environment">—</dd></div>
@@ -52,6 +53,7 @@
                 <th scope="col">Mean score</th>
                 <th scope="col">Best score</th>
                 <th scope="col">Median tile</th>
+                <th scope="col">Failed turns</th>
                 <th scope="col">Episode evidence</th>
               </tr>
             </thead>

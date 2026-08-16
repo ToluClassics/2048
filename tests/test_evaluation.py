@@ -47,6 +47,8 @@ class EvaluationCapabilityTests(unittest.TestCase):
             self.assertEqual(summary["seeds"], seeds)
             self.assertEqual(summary["primary_metric"], "median_score")
             self.assertEqual(summary["source_revision"], source_revision)
+            self.assertIn("python3 benchmark_agents.py", summary["generation_command"])
+            self.assertIn("--start-seed 100", summary["generation_command"])
             self.assertEqual(len(episodes), 2)
             for episode in episodes:
                 records = load_records(output_dir / episode["replay"])
@@ -63,6 +65,11 @@ class EvaluationCapabilityTests(unittest.TestCase):
             )
             self.assertEqual(catalog["entries"][0]["agent"], "random")
             self.assertEqual(len(catalog["entries"][0]["episodes"]), 2)
+            self.assertIn("generation_command", catalog["entries"][0])
+            self.assertEqual(
+                catalog["entries"][0]["failure_summary"]["total_turns"],
+                sum(episode["turns"] for episode in catalog["entries"][0]["episodes"]),
+            )
 
 
 if __name__ == "__main__":
